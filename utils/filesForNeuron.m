@@ -11,7 +11,7 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
 % 
 % Usage example:
 % 
-% >> f = readFilesFor(".\IC Ionto\13_128_Ionto\FRA\", 13, 128, [1, 2])
+% >> f = filesForNeuron(".\IC Ionto\13_128_Ionto\FRA\", 13, 128, [1, 2])
 % >> f = 
 % 
 %   1×2 struct array with fields:
