@@ -33,7 +33,8 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
 %     neuronNumber: 2
 %       folderPath: 'C:\Users\Daniel Torres Ruiz\Desktop\TFM\IC Ionto\13_128_Ionto\FRA'
 %        filenames: {1×63 cell}
-% 
+%
+% $Author: DRTorresRuiz$
     arguments
         folderPath (1,:) char {mustBeFolder} = "."
         yearExperiment (1,1) uint16 = year(datetime())

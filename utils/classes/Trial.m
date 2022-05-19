@@ -4,6 +4,7 @@ classdef Trial
     %   a test trial. It means that contains all the information from all 
     %   sweeps, and all the detected `spikes` that are included in the file
     %   passed as an argument.
+    % $Author: DRTorresRuiz$
     properties
         FilePath
         Num_Sweeps
@@ -26,7 +27,7 @@ classdef Trial
     methods
         function obj = Trial(folderPath, fileName, channels )
             arguments
-                folderPath (1,1) {mustBeFolder}
+                folderPath (1,1) string {mustBeFolder}
                 fileName (1,1) string
                 channels (1,1) {mustBeNumeric, mustBeInteger}
             end
@@ -36,7 +37,7 @@ classdef Trial
             %   common for all trials of a neuron, i.e. files that correspond
             %   to the same neuron.
             
-            filePath = folderPath + fileName;
+            filePath = folderPath + "\" + fileName;
             assert(isfile(filePath), "The following file does not exit: " + filePath)
             obj.FilePath = filePath;
             obj.Channels = channels;
