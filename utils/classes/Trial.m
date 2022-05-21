@@ -11,8 +11,11 @@ classdef Trial
         Channels
         Num_Passes
         Rep_Interval
+        Delay
+        Duration
+        Level
     end
-    
+
     properties (Access = private)
         FileName
         Spikes
@@ -23,7 +26,7 @@ classdef Trial
         RestFormat = "(?<delay>[^\t]*)\t+(?<duration>[^\t]*)\t+(?<stimPerSweep>[^\t]*)\t+(?<interStimInt>[^\t]*)\t+(?<level>[^\t]*)\t+(?<carFreq>[^\t]*)\t+(?<modFreq>[^\t]*)\t+(?<freqDev>[^\t]*)\t+(?<AM_Depth>[^\t]*)\t+(?<phase>[^\t]*)\t+(?<wavFileName>[^\t]*)$"
         SpikeFormat = "(?<n>[^\t]+)\t+(?<sweep>[^\t]+)\t+(?<x_value>[^\t]+)\t+(?<pass>[^\t]*)\t+(?<spikeTimes>.*)$"
     end
-    
+
     methods
         function obj = Trial(folderPath, fileName, channels )
             arguments
@@ -60,9 +63,27 @@ classdef Trial
             obj.Sweeps = obj.readSweeps( sweepContent );
             obj.Spikes = obj.readSpikes( spikesContent );
         end
-        
+
 %         GET Functions
-        function fileName = getFileName(obj) 
+        function delay = get.Delay(obj)
+            % GET.DELAY. Returns the delay of the first sweep.
+            % They should be consistant over the sweeps.
+            delay = obj.Sweeps(1).Delay;
+        end
+
+        function duration = get.Duration(obj)
+            % GET.DELAY. Returns the delay of the first sweep.
+            % They should be consistant over the sweeps.
+            duration = obj.Sweeps(1).Dur;
+        end
+
+        function level = get.Level(obj)
+            % GET.DELAY. Returns the delay of the first sweep.
+            % They should be consistant over the sweeps of the same file
+            level = obj.Sweeps(1).Level;
+        end
+
+        function fileName = getFileName(obj)
             fileName = obj.FileName;
         end 
 
@@ -88,7 +109,7 @@ classdef Trial
             % are NaN or empty chain of characters if string value.
             sweeps = obj.Sweeps;
         end
-        
+
         function spikes = getSpikes(obj)
             % GETSPIKES. Return all spikes in this trial.
             % Each spike is a struct and has the following format:
