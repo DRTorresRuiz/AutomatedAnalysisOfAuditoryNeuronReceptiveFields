@@ -113,11 +113,8 @@ end
             
             if ~isempty(gTrials.Trials)
                 
-                spikes = [];
                 t = gTrials.Trials(1);
-                for trial = gTrials.Trials
-                    spikes = [spikes trial.getSpikes()];
-                end
+                spikes = getAllSpikes(gTrials.Trials);
                 Title = "Dot raster plot of Spike Times (dB SPL: " + t.Level + ")";
                 f = plotTrial(passes, spikes, t.Num_Sweeps,...
                     t.Rep_Interval, t.Delay, t.Duration, ...
