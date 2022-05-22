@@ -1,0 +1,3 @@
+[submodule "utils/functions/density_estimation"]
+	path = utils/functions/density_estimation
+	url = https://github.com/shimazaki/density_estimation
