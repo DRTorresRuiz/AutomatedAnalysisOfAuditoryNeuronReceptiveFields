@@ -57,13 +57,8 @@ function plotSpikeRaster(spikes, passes, num_sweeps, rep_Interval, delay, ...
         
         if showFreq && isequal(property, "Sweep")
             % Replace sweep number by frequency
-            for i = 1:length(y)
-                y(i) = sweeps( y(i) * channels - (channels - 1) ).CarFreq;
-            end
-            
-            for i = 1:max(sets)
-                sets(i) = sweeps( sets(i) * channels - (channels - 1) ).CarFreq;
-            end
+            y = sweepToFreq( y, sweeps, channels );
+            sets = sweepToFreq( sets, sweeps, channels );
         end
         
         hold on;
