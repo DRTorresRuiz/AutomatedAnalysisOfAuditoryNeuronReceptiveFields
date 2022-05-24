@@ -11,7 +11,7 @@ Functions:
 7. [`getAllSpikes(trialList)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getallspikes)
 8. [`plotSpikeRaster(spikes, passes, num_sweeps, rep_Interval, delay, duration, Title, subTitle, showFreq, channels, sweeps, isRelative)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plotspikeraster)
 9. [`plotDotRasters(trials, neuronNumber, passes, levels, showFreq, isRelative, figurePosition)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plotdotrasters)
-10.[`sweepToFreq(y, sweeps, channels)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-sweeptofreq)
+10. [`sweepToFreq(y, sweeps, channels)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-sweeptofreq)
 
 Classes:
 1. [`Trial`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-trial)
