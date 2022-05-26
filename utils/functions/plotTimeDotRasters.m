@@ -1,15 +1,15 @@
 function plotTimeDotRasters(trials, neuronNumber, passes, levels, showFreq, isRelative, figurePosition)
-%PLOTDOTRASTER Given a list of trials, you can configure it to plot
+%PLOTTIMEDOTRASTERS Given a list of trials, you can configure it to plot
 %different dot raster configurations.
 %
 %  Usage examples:
 %
 % Plot a single trial for neuron 2:
-% >> plotDotRasters(trials.neuron(1), 2 );
+% >> plotTimeDotRasters(trials.neuron(1), 2 );
 %
 % Plot the results for all trials grouped by dB SPL, being
 % `trials.Neuron2` a list of Trial objects:
-% >> plotDotRasters(trials.Neuron2, 2, [], 0:10:80 );
+% >> plotTimeDotRasters(trials.Neuron2, 2, [], 0:10:80 );
 %
 % To see more examples, refer to the documentation.
 %

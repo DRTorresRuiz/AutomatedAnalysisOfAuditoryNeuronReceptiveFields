@@ -1,13 +1,13 @@
 function timeSpikeRaster( x, y, y_ticks, property, num_sweeps, interval, delay, ...
             duration, Title, subTitle, showFreq, channels, sweeps, isRelative)
-%PLOTSPIKERASTER Plot a Spike Raster with the specified arguments.
+%TIMESPIKERASTER Plot a Spike Raster with the specified arguments.
 %   The difference with `plotDotRaster` is that `plotDotRaster()` accepts a
 %   list of Trials and plot them all.
 %   This function is mainly used to plot the figure.
 %
 %  Usage examples:
 %
-% >> plotSpikeRaster(x, y, y_ticks, "Sweep", [], 25, 250, 10, 75,...
+% >> timeSpikeRaster(x, y, y_ticks, "Sweep", [], 25, 250, 10, 75,...
 %      "Spike Raster", "Level: 80 dB SPL", true, 2, t(1).getSweeps(), true)
 %
 % To see more examples, refer to the documentation.
