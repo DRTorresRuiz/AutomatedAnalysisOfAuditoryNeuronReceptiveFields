@@ -41,6 +41,5 @@ function timeSpikeRaster( x, y, y_ticks, property, num_sweeps, interval, delay, 
         end
         
         dotRaster(x, y);
-        setFigure(y_ticks, property, Title, subTitle, showFreq );      
-        plotStimBlock(delay, duration, interval, num_sweeps, isRelative);
+        setFigure(y_ticks, property, Title, subTitle, showFreq );
     end
