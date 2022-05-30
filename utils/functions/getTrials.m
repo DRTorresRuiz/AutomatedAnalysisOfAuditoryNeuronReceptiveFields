@@ -8,7 +8,7 @@ function trials = getTrials(neuronFiles, channels)
 
     if ~isempty(neuronFiles)
         trials.year = neuronFiles(1).year;
-        trials.animalNumber = neuronFiles(1).animalNumber;
+        trials.animalID = neuronFiles(1).animalID;
         trials.folderPath = neuronFiles(1).folderPath;
     end
     

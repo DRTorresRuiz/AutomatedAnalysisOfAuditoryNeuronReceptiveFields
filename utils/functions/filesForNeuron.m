@@ -1,4 +1,4 @@
-function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber,...
+function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalID,...
     neuronNumber, fileFormat)
 % This function lists all files for a specific neuron according to the
 % following format:
@@ -17,7 +17,7 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
 %   1×2 struct array with fields:
 % 
 %     year
-%     animalNumber
+%     animalID
 %     neuronNumber
 %     folderPath
 %     filenames
@@ -29,7 +29,7 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
 %   struct with fields:
 % 
 %             year: 13
-%     animalNumber: 128
+%         animalID: 128
 %     neuronNumber: 2
 %       folderPath: 'C:\Users\Daniel Torres Ruiz\Desktop\TFM\IC Ionto\13_128_Ionto\FRA'
 %        filenames: {1×63 cell}
@@ -38,9 +38,9 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
     arguments
         folderPath (1,:) char {mustBeFolder} = "."
         yearExperiment (1,1) uint16 = year(datetime())
-        animalNumber (1,1) uint32 = 1
+        animalID (1,1) string = "1"
         neuronNumber (1,:) uint32 = 1            
-        fileFormat (1,1) string = "[yearExperiment]_[animalNumber]_[neuronNumber]_[testNumber].txt"
+        fileFormat (1,1) string = "[yearExperiment]_[animalID]_[neuronNumber]_[testNumber].txt"
     end
     
 %   Control phase: checking variable requirements.
@@ -49,7 +49,7 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
 
 %   Declaring variables and constants
     yearBlock = "[yearExperiment]";
-    animalNumberBlock = "[animalNumber]";
+    animalNumberBlock = "[animalID]";
     neuronNumberBlock = "[neuronNumber]";
     testNumberBlock = "[testNumber]";
     
@@ -57,7 +57,7 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
     % neuronNumberBlock. This block is replaced later in this function.
     format = replace(fileFormat, yearBlock, string(yearExperiment));
     format = replace(format, testNumberBlock, '*');
-    format = replace(format, animalNumberBlock, string(animalNumber));
+    format = replace(format, animalNumberBlock, string(animalID));
 
 %   Function phase: Returns the list of files according to the arguments in
 %   the specified path.  
@@ -79,7 +79,7 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalNumber
         % Save all filenames and additional information that 
         % correspond to a neuron, if exist any file (trial).
         neuronRecords(i).year = yearExperiment;
-        neuronRecords(i).animalNumber = animalNumber;
+        neuronRecords(i).animalID = animalID;
         neuronRecords(i).neuronNumber = neuronNumber(i);
         neuronRecords(i).folderPath = fileList.folder;
         neuronRecords(i).filenames = {fileList.name};
