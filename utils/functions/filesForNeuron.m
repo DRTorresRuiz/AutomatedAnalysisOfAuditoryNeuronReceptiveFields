@@ -2,9 +2,9 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalID,...
     neuronNumber, fileFormat)
 % This function lists all files for a specific neuron according to the
 % following format:
-%   "[year]_[animalNumber]_[neuronNumber]_[testNumber].txt"
+%   "[year]_[animalID]_[neuronNumber]_[testNumber].txt"
 % NOTE: `fileFormat` can be modified, but this function does not support
-% more blocks than the above ones (`[year]`, `[animalNumber]`, `[neuronNumber]`,
+% more blocks than the above ones (`[year]`, `[animalID]`, `[neuronNumber]`,
 % and [testNumber]). In addition, `[testNumber]` is always replaced by "*"
 % to use regular expressions to find all files for each neuron, since, according 
 % to my requirements, each file corresponds to a different trial with a neuron.
