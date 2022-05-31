@@ -1,5 +1,6 @@
 function [values, h] = PSTH( x, edges )
-%PSTH Plot a PSTH.
+%PSTH Plot a PSTH given the time of the spikes and the 
+% edges to obtain the PSTH.
 %
 % Usage example:
 %

@@ -1,5 +1,5 @@
-function timeSpikeRaster( x, y, y_ticks, property, num_sweeps, interval, delay, ...
-            duration, Title, subTitle, showFreq, channels, sweeps, isRelative)
+function timeSpikeRaster( x, y, y_ticks, property, ...
+            Title, subTitle, showFreq, channels, sweeps )
 %TIMESPIKERASTER Plot a Spike Raster with the specified arguments.
 %   The difference with `plotDotRaster` is that `plotDotRaster()` accepts a
 %   list of Trials and plot them all.

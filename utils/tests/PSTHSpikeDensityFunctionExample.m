@@ -43,8 +43,7 @@ f.Position = [ 100 100 1250 800 ];
 subplot(7,7,[1:7 8:14 15:21 22:28 29:35 36:42]);
 hold on
 
-    timeSpikeRaster(x, y, y_ticks, ...
-        property, sweep_number, interval, delay, duration,...
+    timeSpikeRaster(x, y, y_ticks, property,...
         "Spike Raster", "Level: " +db+" dB SPL", showFreq, channels, sweeps );
     plotStimBlock(delay, duration, interval, sweep_number, isRelative);
     set(gca,'xlabel',[]) % Remove x label to avoid duplication
