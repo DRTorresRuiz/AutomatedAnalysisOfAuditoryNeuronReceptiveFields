@@ -19,7 +19,7 @@ Functions:
 15. [`getValueFromDensityMap(x, x_values, y, y_values, z,  z_values,  densityMap)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getvaluefromdensitymap)
 16. [`getDensityMap(x, x_values, y, y_values, z, z_values, isDiscrete, plotImage)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getdensitymap)
 17. [`getProbabilities( x, x_values, y, y_values, z, z_values, delay, duration, interval, isDiscrete )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getprobabilities)
-18. [`getSpontaneousActivity( x, y, z, p, baseCaseProbabilties )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getspontaneousactivity)
+18. [`getSpontaneousActivity( x, y, z, p, baseCaseProbabilities )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getspontaneousactivity)
 
 Classes:
 1. [`Trial`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-trial)

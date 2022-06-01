@@ -1,4 +1,4 @@
-function [spikes, sa] = getSpontaneousActivity( x, y, z, p, baseCaseProbabilties )
+function [spikes, sa] = getSpontaneousActivity( x, y, z, p, baseCaseProbabilities )
 %GETSPONTANEOUSACTIVYT Separate spontaneous activity from stimulus
 %responses.
 %   The base case should include only spontaneuous activity. Normally, in
@@ -21,13 +21,13 @@ arguments
     y (1,:) {mustBeNumeric}
     z (1,:) {mustBeNumeric}
     p (1,:) {mustBeNumeric}
-    baseCaseProbabilties = []
+    baseCaseProbabilities = []
 end
     
-    if ~isempty(baseCaseProbabilties)
+    if ~isempty(baseCaseProbabilities)
         threshold = mean( p );
     else
-        threshold = max(baseCaseProbabilties, [], 'all') + std(baseCaseProbabilties);
+        threshold = max(baseCaseProbabilities, [], 'all') + std(baseCaseProbabilities);
     end
 
     spikes = [];
