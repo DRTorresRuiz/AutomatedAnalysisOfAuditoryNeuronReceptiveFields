@@ -1,5 +1,5 @@
-function probs = getProbabilityDistributionFunction( x, x_values, y, y_values, z, z_values, delay, duration, interval, isDiscrete )
-%GETPROBABILITYDISTRIBUTIONFUNCTION Return a probability distribution
+function probs = getProbabilities( x, x_values, y, y_values, z, z_values, delay, duration, interval, isDiscrete )
+%GETPROBABILITIES Return a probability distribution
 % function. The sum of all probabilities sum 1.
 % By default, this function obtain the probability by the closeness between
 % points in a trial (Euclidean Distance), the point population in each value of `z` 
@@ -12,7 +12,7 @@ function probs = getProbabilityDistributionFunction( x, x_values, y, y_values, z
 %
 % Usage example:
 %
-% >> probs = getProbabilityDistributionFunction( x, x_values, y, y_values, z, z_values,...
+% >> probs = getProbabilities( x, x_values, y, y_values, z, z_values,...
 %    delay, duration, interval );
 %
 % $Author: DRTorresRuiz$
