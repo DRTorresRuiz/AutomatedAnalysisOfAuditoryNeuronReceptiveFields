@@ -20,6 +20,7 @@ Functions:
 16. [`getDensityMap(x, x_values, y, y_values, z, z_values, isDiscrete, plotImage)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getdensitymap)
 17. [`getProbabilities( x, x_values, y, y_values, z, z_values, delay, duration, interval, isDiscrete )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getprobabilities)
 18. [`getSpontaneousActivity( x, y, z, p, baseCaseProbabilities )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getspontaneousactivity)
+19. [`spikeRaster3D(x, y, z, p, threshold, interval, max_p, Title, subTitle, x_ticks, y_ticks, z_ticks, x_tick_labels, y_tick_labels, z_tick_labels, point_size, point_alpha, labels, lim, colorbarLabel)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-spikeraster3d)
 
 Classes:
 1. [`Trial`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-trial)
