@@ -28,7 +28,7 @@ arguments
     point_size = 40
     point_alpha = 0.6
     labels = ["Time (ms)", "Freq (Hz)", "dB SPL" ]
-    lim = [ -10 interval; min(y)-1 max(y)+1; min(z)-10 max(z)+10 ]
+    lim = [ -10 interval; min(y_ticks)-1 max(y_ticks)+1; min(z_ticks)-10 max(z_ticks)+10 ]
     colorbarLabel = "Probability Distribution"
 end
  
