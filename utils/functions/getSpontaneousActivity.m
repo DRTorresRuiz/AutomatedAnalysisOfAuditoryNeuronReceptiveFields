@@ -1,4 +1,4 @@
-function [spikes, sa] = getSpontaneousActivity( x, y, z, p, baseCaseProbabilities )
+function [spikes, sa, threshold] = getSpontaneousActivity( x, y, z, p, baseCaseProbabilities )
 %GETSPONTANEOUSACTIVYT Separate spontaneous activity from stimulus
 %responses.
 %   The base case should include only spontaneuous activity. Normally, in
@@ -36,7 +36,7 @@ end
         time = x(i);
         sweep = y(i);
         db = z(i);
-        prob = probs(i);
+        prob = p(i);
 
         if threshold < prob
             spikes = [spikes; time, sweep, db, prob];
