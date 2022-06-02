@@ -1,4 +1,4 @@
-function plotTimeDotRasters(trials, neuronNumber, passes, levels, showFreq, isRelative, figurePosition)
+function im = plotTimeDotRasters(trials, neuronNumber, passes, levels, showFreq, isRelative, figurePosition)
 %PLOTTIMEDOTRASTERS Given a list of trials, you can configure it to plot
 %different dot raster configurations.
 %
@@ -35,13 +35,14 @@ end
         end
     end
 
+    im = [];
     if isempty(levels)
         
         subTitle = "Neuron: " + neuronNumber;
         for t = trials
+            f = figure;
             if ~isempty(figurePosition)
                 assert( length(figurePosition) == 4, "`figurePosition` argument must contains only 4 values.");
-                f = figure;
                 f.Position = figurePosition;
             end
             
@@ -49,9 +50,12 @@ end
             Title = "Dot raster plot of Spike Times (dB SPL: " + t.Level + ")"; 
             [y_ticks, property] = settingPlot(t.Num_Sweeps, passes);
             [x, y] = getPoints( t.getSpikes(), property, t.Num_Sweeps, t.Rep_Interval, isRelative );
-            timeSpikeRaster(x, y, y_ticks, property, t.Num_Sweeps,...
-                t.Rep_Interval, t.Delay, t.Duration, ...
-                Title, subTitle, showFreq, t.Channels, t.getSweeps(), isRelative);
+            timeSpikeRaster(x, y, y_ticks, property, ...
+                Title, subTitle, showFreq, t.Channels, t.getSweeps());
+             plotStimBlock(t.Delay, t.Duration, t.Rep_Interval, t.Num_Sweeps, isRelative);
+             
+            frame = getframe(f);
+            im{length(im)+1} = frame2im(frame);
         end
     else
 
@@ -63,16 +67,20 @@ end
                 
                 t = gTrials.Trials(1);
                 spikes = getAllSpikes(gTrials.Trials);
+                f = figure;
                 if ~isempty(figurePosition)
-                    f = figure;
+                    assert( length(figurePosition) == 4, "`figurePosition` argument must contains only 4 values.");
                     f.Position = figurePosition;
                 end
                 Title = "Dot raster plot of Spike Times (dB SPL: " + t.Level + ")";
                 [y_ticks, property] = settingPlot(t.Num_Sweeps, passes);
                 [x, y] = getPoints( spikes, property, t.Num_Sweeps, t.Rep_Interval, isRelative );
-                timeSpikeRaster(x, y, y_ticks, property, t.Num_Sweeps,...
-                    t.Rep_Interval, t.Delay, t.Duration, ...
-                    Title, subTitle, showFreq, t.Channels, t.getSweeps(), isRelative);
+                timeSpikeRaster(x, y, y_ticks, property,...
+                    Title, subTitle, showFreq, t.Channels, t.getSweeps() );
+                plotStimBlock(t.Delay, t.Duration, t.Rep_Interval, t.Num_Sweeps, isRelative);
+             
+                frame = getframe(f);
+                im{length(im)+1} = frame2im(frame);
             end
         end
     end
