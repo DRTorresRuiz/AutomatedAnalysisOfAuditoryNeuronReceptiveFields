@@ -1,4 +1,5 @@
-function probs = getProbabilities( x, x_values, y, y_values, z, z_values, delay, duration, interval, isDiscrete )
+function probs = getProbabilities( x, x_values, y, y_values, z, z_values,...
+    delay, duration, interval, useDensityMap, isDiscrete )
 %GETPROBABILITIES Return a probability distribution
 % function. The sum of all probabilities sum 1.
 % By default, this function obtain the probability by the closeness between
@@ -26,12 +27,15 @@ arguments
     delay (1,1) {mustBeNumeric, mustBeGreaterThanOrEqual(delay,0)}    = 0
     duration (1,1) {mustBeNumeric, mustBeGreaterThanOrEqual(duration,0)} = 0 
     interval (1,1) {mustBeNumeric, mustBeGreaterThanOrEqual(interval,0)} = 0
+    useDensityMap = false
     isDiscrete (1,3) = [0 1 1]
 end
 
 %% Get density map
-[ ~, ~, ~, ~, ~, ~, xyz_density, ~ ] =...
-    getDensityMap( x, x_values, y, y_values, z, z_values, isDiscrete );
+if useDensityMap
+    [ ~, ~, ~, ~, ~, ~, xyz_density, ~ ] =...
+        getDensityMap( x, x_values, y, y_values, z, z_values, isDiscrete );
+end
 
 %% Calculate Euclidean Distance
 % to obtain a closeness approach for density around a specific point.
@@ -72,14 +76,15 @@ for i = 1:size(dist, 1)
             prob_spike = prob_spike * prob_in_window;
         end
         
-        % Multiply previous probability by the probability in the
-        % density map
-        prob_spike = prob_spike *...
-            getValueFromDensityMap( x_i, x_values, ...
-            y_i, y_values, ...
-            z_i, z_values, ...
-            xyz_density);
-            
+        if useDensityMap
+            % Multiply previous probability by the probability in the
+            % density map
+            prob_spike = prob_spike *...
+                getValueFromDensityMap( x_i, x_values, ...
+                y_i, y_values, ...
+                z_i, z_values, ...
+                xyz_density);
+        end   
     else
         % If there is only one point, prob is likely zero.
         prob_spike = 0;
