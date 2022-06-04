@@ -22,6 +22,7 @@ Functions:
 18. [`getSpontaneousActivity( x, y, z, p, baseCaseProbabilities )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getspontaneousactivity)
 19. [`spikeRaster3D(x, y, z, p, threshold, interval, max_p, Title, subTitle, x_ticks, y_ticks, z_ticks, x_tick_labels, y_tick_labels, z_tick_labels, point_size, point_alpha, labels, lim, colorbarLabel)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-spikeraster3d)
 20. [`saveGIF(filename,images)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-savegif)
+21. [`plotTimeDotRasters3D(trials, levels, showFreq, cleanSA, showSeparation, figurePosition )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plottimedotrasters3d)
 
 Classes:
 1. [`Trial`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-trial)
