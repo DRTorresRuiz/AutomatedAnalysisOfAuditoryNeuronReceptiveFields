@@ -30,5 +30,7 @@ Classes:
 Code Examples:
 - [Reading trials from files](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/readingTrials.m).
 - [Time dot raster plot examples](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/plotTimeDotRasterExamples.m).
+- [3D time dot raster plot examples](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/plotTimeDotRasters3DExamples.m).
 - [Time spike raster examples](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/timeSpikeRasterExamples.m).
 - [PSTH and spike density function examples](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/PSTHSpikeDensityFunctionExample.m).
+- [Usage examples of `spikeRaster3D()`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/spikeRaster3DExamples.m).
