@@ -1,13 +1,13 @@
 function [spikes, sa, threshold] = getSpontaneousActivity( x, y, z, p, baseCaseProbabilities )
 %GETSPONTANEOUSACTIVYT Separate spontaneous activity from stimulus
 %responses.
-%   The base case should include only spontaneuous activity. Normally, in
+%   The base case should include only spontaneous activity. Normally, in
 %   these cases in the AC, this means 0 dB SPL.
-%   If there is no spikes with 0 dB SPL, the prob is set to 0.
 %   Main idea is to separate stimulus responses from spontaneous activity
-%   using a threshold. This threshold is by default the mean of all probabilities.
-%   However, you can introduce the probabilities of the base case to use the highest probability
-%   of the base case plus its standard deviation as threshold.
+%   using a threshold. This threshold is by default the most representative 
+%   value of the less significant 25 percent of the stimuli. However,
+%   you can introduce the probabilities of the base case to use the 
+%   highest probability of the base case as threshold.
 %
 %   Usage example:
 %
@@ -23,13 +23,23 @@ arguments
     p (1,:) {mustBeNumeric}
     baseCaseProbabilities = []
 end
-    
-    if ~isempty(baseCaseProbabilities)
-        threshold = mean( p );
-    else
-        threshold = max(baseCaseProbabilities, [], 'all') + std(baseCaseProbabilities);
-    end
 
+    if length( baseCaseProbabilities ) / length( x ) > 0.002
+        threshold = max( baseCaseProbabilities, [], 'all' );
+    else
+        median_p = median( p );
+        p50_less_significant = p( p < median_p );
+        median_p50_less_significant = median( p50_less_significant );
+        p25_less_significant = p50_less_significant( p50_less_significant < median_p50_less_significant );
+        mean_p25_less_significant = mean( p25_less_significant ) - std( p25_less_significant );
+        if mean_p25_less_significant < 0
+            mean_p25_less_significant = mean( p25_less_significant );
+            threshold = min( p( p < mean_p25_less_significant & p > 0 ) );
+        else
+            threshold = max( p( p < mean_p25_less_significant & p > 0 ) );
+        end
+    end
+    
     spikes = [];
     sa = [];
     for i = 1:length(x)

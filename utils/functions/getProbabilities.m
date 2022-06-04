@@ -27,7 +27,7 @@ arguments
     delay (1,1) {mustBeNumeric, mustBeGreaterThanOrEqual(delay,0)}    = 0
     duration (1,1) {mustBeNumeric, mustBeGreaterThanOrEqual(duration,0)} = 0 
     interval (1,1) {mustBeNumeric, mustBeGreaterThanOrEqual(interval,0)} = 0
-    useDensityMap = false
+    useDensityMap = true
     isDiscrete (1,3) = [0 1 1]
 end
 
@@ -40,10 +40,13 @@ end
 %% Calculate Euclidean Distance
 % to obtain a closeness approach for density around a specific point.
 all_points = [x', y', z'];
-dist = squareform(pdist(all_points(:,1), 'euclidean'));
+dist = squareform(pdist(all_points, 'euclidean'));
+sum_dist = sum(sum(dist));
+all_points_size = size(all_points, 1);
 
 %% Calculate probabilities 
 probs = [];
+end_stimulus = delay + duration;
 for i = 1:size(dist, 1)
     % Obtain the evaluated point values.
     x_i = all_points( i, 1 );
@@ -53,45 +56,33 @@ for i = 1:size(dist, 1)
     % Get all points in the same trial, this mean with the same frequency
     % and intensity ( Y and Z axis )
     all_x_trial = all_points(all_points(:,2) == y_i & all_points(:,3) == z_i ,1);
-    all_idx = find( all_x_trial == x_i ); % index for the current value in all_x_trials.
-
-    % Get distances for the current point
-    x_dist = squareform(pdist(all_x_trial));
-    x_dist_sum = sum(x_dist); % Sum all distances for each point in the trial
-    x_sum = x_dist_sum(all_idx); % Get the accumulative sum for the current point
     
-    if size(x_dist, 1) > 1 % If there is more than one point in the trial (for a specific frequency and intensity)
-        % Check the closeness to other points using the Euclidean distance
-        prob_spike = ( sum(x_dist_sum) - x_sum(1)) / sum(x_dist_sum);
-        % Multiply by the spike population rate of this trial
-        prob_spike = prob_spike * size(x_dist, 1) / size(all_points, 1);
-        
-        % Calculate the probability of being close to the stimulus window
-        if interval * delay * duration > 0 
-            prob_close_to_end_stimulus = 1 - abs((delay+duration) - x_i)/(interval - (delay+duration) );
-            prob_after_stimulus_starts = 1 - abs(( x_i - delay ) / ( interval - delay )); 
-            prob_in_window = prob_close_to_end_stimulus * prob_after_stimulus_starts;
-            
-            % Multiply by the probability of being close to the stimulus
-            prob_spike = prob_spike * prob_in_window;
-        end
-        
-        if useDensityMap
-            % Multiply previous probability by the probability in the
-            % density map
-            prob_spike = prob_spike *...
-                getValueFromDensityMap( x_i, x_values, ...
-                y_i, y_values, ...
-                z_i, z_values, ...
-                xyz_density);
-        end   
-    else
-        % If there is only one point, prob is likely zero.
-        prob_spike = 0;
+    % Closeness to the rest of points 3D
+    prob_response = ( sum_dist - sum(dist(:,i)) )/ sum_dist;
+    % Multiply by the spike population rate of this trial
+    prob_response = prob_response * size(all_x_trial, 1) / all_points_size;
+    
+    % Calculate the probability of being close to the stimulus window
+    if x_i < delay
+        prob_response = 0;
+    elseif x_i > end_stimulus
+        h = 0.1119 * ((end_stimulus + interval)/2) / (interval/2);
+        g = 2^(-h*(x_i - (end_stimulus + interval)/2));
+        prob_response = prob_response * g / (g + 1) ;
     end
-    
+
+    if useDensityMap
+    %     Multiply previous probability by the probability in the
+    %     density map
+        prob_response = prob_response *...
+            getValueFromDensityMap( x_i, x_values, ...
+            y_i, y_values, ...
+            z_i, z_values, ...
+            xyz_density);
+    end   
+
     % Add to the result
-    probs = [probs, prob_spike ];
+    probs = [probs, prob_response ];
 end
 
 %% Normalize by sum
