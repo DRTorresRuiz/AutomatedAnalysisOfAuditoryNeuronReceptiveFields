@@ -1,4 +1,4 @@
-function FRA = getFRA( x, y, z, y_values, z_values )
+function FRA = getFRA( x, y, z, y_values, z_values, cleanSA )
 %GETFRA Given a specific number of points, that represent spikes, this
 %function returns a FRA struct with:
 % - raw: The number of spikes for each (z,y) cell in a ZxY matrix.
@@ -22,8 +22,11 @@ function FRA = getFRA( x, y, z, y_values, z_values )
 % - sorted: All FRA.conv values in ascending order.
 % - less_significant_mean: mean of less significant values
 % - less_significant_std: Standard deviation of less significant values
-% - significant_threshold: Value in which the most abrupt change occurs
-% (obtained using `findchangepts` MATLAB R2022a function).
+% - core_threshold: Value in which the most abrupt change occurs
+% (obtained using `findchangepts` MATLAB R2022a function). Higher values
+% are in the core part of the receptive field of the neuron.
+% - periphery_threshold: Higher values of this threshold are in the
+% periphery part of the receptive field of the neuron.
 %
 % Usage example:
 %
@@ -48,7 +51,8 @@ function FRA = getFRA( x, y, z, y_values, z_values )
 %                            sorted: [225×1 double]
 %             less_significant_mean: 0.0141
 %              less_significant_std: 0.0194
-%             significant_threshold: 0.0971
+%                    core_threshold: 0.0971
+%               periphery_threshold: 0.0342
 %
 % $Author: DRTorresRuiz$
 arguments
@@ -56,7 +60,8 @@ arguments
     y (1,:)
     z (1,:)
     y_values = unique(y)
-    z_values = unique(z) 
+    z_values = unique(z)
+    cleanSA = false
 end
 
 %% Init FRA
@@ -94,10 +99,22 @@ FRA.sorted = sort(FRA.conv(:)); % Save all values from conv in order.
 % Find abrupt changes: https://es.mathworks.com/help/signal/ref/findchangepts.html#bu3nws1-ipt
 ipt = findchangepts(FRA.sorted, 'MaxNumChanges', 1);
 
-% Significant information
+% Significant information to obtain the RF.
 FRA.less_significant_mean = mean(FRA.sorted(1:ipt-1));
 FRA.less_significant_std = std(FRA.sorted(1:ipt-1));
-FRA.significant_threshold = FRA.sorted(ipt);
+FRA.core_threshold = FRA.sorted(ipt);
+
+FRA.periphery_threshold = FRA.less_significant_mean;
+if cleanSA
+    FRA.periphery_threshold = FRA.periphery_threshold + FRA.less_significant_std;
+end
+
+%% Contours
+[xPRF, yPRF] = getBiggestArea( FRA.conv, FRA.periphery_threshold, y_values, z_values );
+FRA.periphery_bounds = [xPRF', yPRF'];
+
+[xCRF, yCRF] = getBiggestArea( FRA.conv, FRA.core_threshold, y_values, z_values );
+FRA.core_bounds = [xCRF', yCRF'];
 
 end
 
