@@ -73,7 +73,24 @@ arguments
 end
 
 %% Init FRA
-FRA.raw = zeros( length(z_values), length(y_values) );
+FRA.x_size = length(z_values);
+FRA.y_size = length(y_values);
+FRA.raw = zeros( FRA.x_size, FRA.y_size );
+
+%% Amplify y_values and z_values
+if ~isempty(y_values)
+    FRA.max_y = max(y_values);
+    FRA.min_y = min(y_values);
+    m_y = min(diff(y_values));
+    y_values = [ (y_values(1) - 10 * m_y):m_y:(y_values(1) - m_y), y_values, (y_values(end) + m_y):m_y:(y_values(end) + 10 * m_y) ];
+end
+
+if ~isempty(z_values)
+    FRA.max_x = max(z_values);
+    FRA.min_x = min(z_values);
+    m_x = min(diff(z_values));
+    z_values = [ (z_values(1) - 10 * m_x):m_x:(z_values(1) - m_x), z_values, (z_values(end) + m_x):m_x:(z_values(end) + 10 * m_x) ];
+end
 
 %% Count values for each position of FRA
 for yi = y_values
@@ -91,18 +108,20 @@ end
 
 %% Statistical information about the FRA
 FRA.normalized = FRA.raw / sum(FRA.raw, 'all');
-FRA.mean = mean(FRA.raw, 'all');
-FRA.median = median(FRA.raw, 'all');
-FRA.mode = mode(FRA.raw,'all');
-FRA.std = std(FRA.raw, [], 'all');
-FRA.var = var(FRA.raw, [], 'all');
-FRA.max = max(FRA.raw, [], 'all');
-FRA.min = min(FRA.raw, [], 'all');
+FRA.mean = mean(FRA.raw(11:end-10, 11:end-10), 'all');
+FRA.median = median(FRA.raw(11:end-10, 11:end-10), 'all');
+FRA.mode = mode(FRA.raw(11:end-10, 11:end-10),'all');
+FRA.std = std(FRA.raw(11:end-10, 11:end-10), [], 'all');
+FRA.var = var(FRA.raw(11:end-10, 11:end-10), [], 'all');
+FRA.max = max(FRA.raw(11:end-10, 11:end-10), [], 'all');
+FRA.min = min(FRA.raw(11:end-10, 11:end-10), [], 'all');
 % Smooth convolution
 FRA.conv = conv2(FRA.normalized, [ 1 1 1; 1 1 1; 1 1 1], 'same'); 
 % Negative smooth convolution
 FRA.negconv = conv2(FRA.normalized, [ -1 -1 -1; -1 -1 -1; -1 -1 -1], 'same'); 
-FRA.sorted = sort(FRA.conv(:)); % Save all values from conv in order.
+
+realConv = FRA.conv(11:end-10, 11:end-10);
+FRA.sorted = sort(realConv(:)); % Save all values from conv in order.
 
 % Find abrupt changes: https://es.mathworks.com/help/signal/ref/findchangepts.html#bu3nws1-ipt
 ipt = findchangepts(FRA.sorted, 'MaxNumChanges', 1);
@@ -110,7 +129,11 @@ ipt = findchangepts(FRA.sorted, 'MaxNumChanges', 1);
 % Significant information to obtain the RF.
 FRA.less_significant_mean = mean(FRA.sorted(1:ipt-1));
 FRA.less_significant_std = std(FRA.sorted(1:ipt-1));
-FRA.core_threshold = FRA.sorted(ipt);
+FRA.most_significant_mean = mean(FRA.sorted(ipt:end));
+FRA.most_significant_std = std(FRA.sorted(ipt:end));
+
+% FRA.core_threshold = FRA.sorted(ipt);
+FRA.core_threshold = FRA.most_significant_mean;
 
 FRA.periphery_threshold = FRA.less_significant_mean;
 if cleanSA
@@ -125,18 +148,77 @@ FRA.spikes_per_db = [z_values', sum(FRA.raw,2)];
 %% Contours
 % Bounds of the Periphery RF (PRF)
 [xPRF, yPRF] = getBiggestArea( FRA.conv, FRA.periphery_threshold, y_values, z_values );
-FRA.periphery_bounds = [xPRF', yPRF'];
+FRA.periphery_bounds = [round(xPRF', -round( m_y / 10)), round(yPRF',-round( m_x / 10))];
 % Bounds of the Core RF (CRF)
 [xCRF, yCRF] = getBiggestArea( FRA.conv, FRA.core_threshold, y_values, z_values );
-FRA.core_bounds = [xCRF', yCRF'];
+FRA.core_bounds = [round(xCRF', -round( m_y / 10)), round(yCRF',-round( m_x / 10))];
+
+%% RF Mask
+y_points = repmat( y_values(11:end-10), 1, FRA.x_size );
+z_points = repmat( z_values(11:end-10), 1, FRA.y_size );
+[Cin, ~] = inpolygon(  y_points, z_points, FRA.core_bounds(:,1), FRA.core_bounds(:,2) );
+[Pin, Pon] = inpolygon(  y_points, z_points, FRA.periphery_bounds(:,1), FRA.periphery_bounds(:,2) );
+
+% Frequency and dB points in the periphery and the core of the RF.
+FRA.points_in_periphery = [y_points(( Pin | Pon ) & ~Cin); z_points(( Pin | Pon ) & ~Cin)];
+FRA.points_in_core = [y_points(Cin); z_points(Cin)];
+
+FRA.rf_mask = zeros( size(FRA.raw) );
+% PERIPHERY
+for point = FRA.points_in_periphery
+    [~, idz] = min( abs(z_values - point(2)) );
+    [~, idy] = min( abs(y_values - point(1)) );
+    FRA.rf_mask( idz, idy ) = 1;
+end
+
+% CORE
+for point = [y_points(Cin); z_points(Cin)]
+    [~, idz] = min( abs(z_values - point(2)) );
+    [~, idy] = min( abs(y_values - point(1)) );
+    FRA.rf_mask( idz, idy ) = 2;
+end
 
 %% RF Characteristics
 
+% Total spikes in all the FRA
+FRA.total_spikes = sum( FRA.raw, 'all');
 % Total spikes in the PRF
+FRA.spikes_PRF = sum( FRA.raw( FRA.rf_mask == 1 ) );
 % Total spikes in the CRF
+FRA.spikes_CRF = sum( FRA.raw( FRA.rf_mask == 2 ) );
+% Total spikes in the RF
+FRA.spikes_RF = FRA.spikes_PRF + FRA.spikes_CRF;
 
+max_area = FRA.x_size * FRA.y_size;
 % Total area of the PRF
+FRA.area_PRF = numel( FRA.raw( FRA.rf_mask == 1 ) ) / max_area;
 % Total area of the CRF
+FRA.area_CRF = numel( FRA.raw( FRA.rf_mask == 2 ) ) / max_area;
+% Total area of the RF
+FRA.area_RF = FRA.area_PRF + FRA.area_CRF;
+
+% Clean bounds and points
+FRA.periphery_bounds = FRA.periphery_bounds( ...
+    FRA.periphery_bounds(:,1) >= FRA.min_y &...
+    FRA.periphery_bounds(:,1) <= FRA.max_y &...
+    FRA.periphery_bounds(:,2) >= FRA.min_x &...
+    FRA.periphery_bounds(:,2) <= FRA.max_x, : );
+FRA.points_in_periphery = FRA.points_in_periphery( :, ...
+    FRA.points_in_periphery(1, :) >= FRA.min_y &...
+    FRA.points_in_periphery(1, :) <= FRA.max_y &...
+    FRA.points_in_periphery(2, :) >= FRA.min_x &...
+    FRA.points_in_periphery(2, :) <= FRA.max_x );
+
+FRA.core_bounds = FRA.core_bounds( ...
+    FRA.core_bounds(:,1) >= FRA.min_y &...
+    FRA.core_bounds(:,1) <= FRA.max_y &...
+    FRA.core_bounds(:,2) >= FRA.min_x &...
+    FRA.core_bounds(:,2) <= FRA.max_x, : );
+FRA.points_in_core = FRA.points_in_core( :,...
+    FRA.points_in_core(1, :) >= FRA.min_y &...
+    FRA.points_in_core(1, :) <= FRA.max_y &...
+    FRA.points_in_core(2, :) >= FRA.min_x &...
+    FRA.points_in_core(2, :) <= FRA.max_x );
 
 % Width of the PRF
 % Width of the CRF
@@ -156,5 +238,12 @@ FRA.core_bounds = [xCRF', yCRF'];
 
 % Function Slopes
 
+
+%% After all remove amplified values
+FRA.raw = FRA.raw(11:end-10, 11:end-10);
+FRA.normalized = FRA.normalized(11:end-10, 11:end-10);
+FRA.conv = realConv;
+FRA.negconv = FRA.negconv(11:end-10, 11:end-10);
+FRA.rf_mask = FRA.rf_mask(11:end-10, 11:end-10);
 end
 
