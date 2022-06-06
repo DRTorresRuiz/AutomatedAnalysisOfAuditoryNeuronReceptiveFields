@@ -27,6 +27,10 @@ function FRA = getFRA( x, y, z, y_values, z_values, cleanSA )
 % are in the core part of the receptive field of the neuron.
 % - periphery_threshold: Higher values of this threshold are in the
 % periphery part of the receptive field of the neuron.
+% - periphery_bounds: points of the contour that delimit periphery RF.
+% - core_bounds: points of the contour that delimit core RF.
+% - spikes_per_freq: Sum of all spikes per Frequency.
+% - spikes_per_db: Sum of all spikes per sound level (dB SPL).
 %
 % Usage example:
 %
@@ -53,7 +57,11 @@ function FRA = getFRA( x, y, z, y_values, z_values, cleanSA )
 %              less_significant_std: 0.0194
 %                    core_threshold: 0.0971
 %               periphery_threshold: 0.0342
-%
+%                   spikes_per_freq: [25×2 double]
+%                     spikes_per_db: [9×2 double]
+%                  periphery_bounds: [21×2 double]
+%                       core_bounds: [21×2 double]
+% 
 % $Author: DRTorresRuiz$
 arguments
     x (1,:) 
@@ -109,12 +117,44 @@ if cleanSA
     FRA.periphery_threshold = FRA.periphery_threshold + FRA.less_significant_std;
 end
 
+% Total spikes per Freq
+FRA.spikes_per_freq = [y_values', sum(FRA.raw,1)'];
+% Total spikes per dB
+FRA.spikes_per_db = [z_values', sum(FRA.raw,2)];
+
 %% Contours
+% Bounds of the Periphery RF (PRF)
 [xPRF, yPRF] = getBiggestArea( FRA.conv, FRA.periphery_threshold, y_values, z_values );
 FRA.periphery_bounds = [xPRF', yPRF'];
-
+% Bounds of the Core RF (CRF)
 [xCRF, yCRF] = getBiggestArea( FRA.conv, FRA.core_threshold, y_values, z_values );
 FRA.core_bounds = [xCRF', yCRF'];
+
+%% RF Characteristics
+
+% Total spikes in the PRF
+% Total spikes in the CRF
+
+% Total area of the PRF
+% Total area of the CRF
+
+% Width of the PRF
+% Width of the CRF
+
+% Height of the PRF
+% Height of the CRF
+
+% Response threshold (Characteristic Frequency, CF) - the frequency where
+% the sound level is minimum.
+
+% Best Frequency (BF). The frequency eliciting the highest response in the
+% frequency-response profile was defined as the BF.
+
+% Center Frequency
+
+% Point at which there is the highest rate of spikes
+
+% Function Slopes
 
 end
 

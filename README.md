@@ -24,6 +24,7 @@ Functions:
 20. [`saveGIF(filename,images)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-savegif)
 21. [`plotTimeDotRasters3D(trials, levels, showFreq, cleanSA, showSeparation, figurePosition )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plottimedotrasters3d)
 22. [`getFRA( x, y, z, y_values, z_values, cleanSA )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getfra)
+23. [`getBiggestArea( fra_values, threshold, y_values, z_values )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getbiggestarea)
 
 Classes:
 1. [`Trial`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-trial)
