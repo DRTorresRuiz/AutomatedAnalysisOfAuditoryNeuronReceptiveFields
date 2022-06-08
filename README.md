@@ -23,7 +23,7 @@ Functions:
 19. [`spikeRaster3D(x, y, z, p, threshold, interval, max_p, Title, subTitle, x_ticks, y_ticks, z_ticks, x_tick_labels, y_tick_labels, z_tick_labels, point_size, point_alpha, labels, lim, colorbarLabel)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-spikeraster3d)
 20. [`saveGIF(filename,images)`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-savegif)
 21. [`plotTimeDotRasters3D(trials, levels, showFreq, cleanSA, showSeparation, figurePosition )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plottimedotrasters3d)
-22. [`getFRA( x, y, z, y_values, z_values, cleanSA )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getfra)
+22. [`getFRA( x, y, z, sweeps, channels, y_values, z_values, kernel )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getfra)
 23. [`getBiggestArea( fra_values, threshold, y_values, z_values )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getbiggestarea)
 
 Classes:
