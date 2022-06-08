@@ -25,6 +25,7 @@ Functions:
 21. [`plotTimeDotRasters3D(trials, levels, showFreq, cleanSA, showSeparation, figurePosition )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plottimedotrasters3d)
 22. [`getFRA( x, y, z, sweeps, channels, y_values, z_values, kernel )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getfra)
 23. [`getBiggestArea( fra_values, threshold, y_values, z_values )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getbiggestarea)
+24. [`plotFRA( trials, levels, showPeriphery, showCore, showBF, showCF, showSlopes, displayInfo, showFreq, cleanSA, figurePosition )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plotfra)
 
 Classes:
 1. [`Trial`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-trial)
