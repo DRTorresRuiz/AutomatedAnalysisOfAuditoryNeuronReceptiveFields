@@ -52,17 +52,13 @@ hold off
 
 subplot(7,7,43:49);
 hold on;
-
-    if kernel % Plot Spike Density Function
-        % Using an updated version of Shimazaki's `ssvkernel()` function.
-        values = ssvkernel( x, x_values, true ); % Set last value to true to plot
-
-    else % Plot PSTH
-        values = PSTH( x, x_values );
-    end
-    yline( mean(values), 'LineStyle', ':', 'Color', 'r', 'LineWidth', 2);
-    plotStimBlock( delay, duration, interval, sweep_number, isRelative )
-
+% Using an updated version of Shimazaki's `ssvkernel()` function.
+ssvkernel( x, x_values, true ); % Set last value to true to plot
+ylabel( "Spike Density (%)" );
+% Plot PSTH
+yyaxis right
+PSTH( x, x_values );
+plotStimBlock( delay, duration, interval, sweep_number, isRelative )
 hold off;
 
 
