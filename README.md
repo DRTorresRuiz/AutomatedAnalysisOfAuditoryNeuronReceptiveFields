@@ -37,4 +37,5 @@ Code Examples:
 - [Time spike raster examples](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/timeSpikeRasterExamples.m).
 - [PSTH and spike density function examples](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/PSTHSpikeDensityFunctionExample.m).
 - [Usage examples of `spikeRaster3D()`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/spikeRaster3DExamples.m).
-- [Usage example of plotting a FRA](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/plotFRAExample.m)
+- [Usage example of plotting a FRA](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/plotFRAExample.m).
+- [Plotting FRA for a set of neurons](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/plotFRAForAllNeuronsExample.m).
