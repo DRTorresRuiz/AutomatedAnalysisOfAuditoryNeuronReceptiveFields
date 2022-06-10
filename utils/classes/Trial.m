@@ -14,6 +14,10 @@ classdef Trial
         Delay
         Duration
         Level
+        HeaderFormat
+        SweepFormat
+        RestFormat
+        SpikeFormat
     end
 
     properties (Access = private)
@@ -21,18 +25,19 @@ classdef Trial
         Spikes
         Sweeps
         FileContent
-        HeaderFormat = "Filename\t+(?<filename>.*) Num_Sweeps\t+(?<numSweeps>.*) Num_Passes\t+(?<numPasses>.*) Rep_Interval\t+(?<repInterval>.*)$"
-        SweepFormat = "(?<sweepNumber>[^\t]+)\t+(?<timeOffset>[^\t]+)\t+(?<channel>[^\t]*)\t+(?<stimType>(SINUS|OFF))\t*(?<rest>.*)$"
-        RestFormat = "(?<delay>[^\t]*)\t+(?<duration>[^\t]*)\t+(?<stimPerSweep>[^\t]*)\t+(?<interStimInt>[^\t]*)\t+(?<level>[^\t]*)\t+(?<carFreq>[^\t]*)\t+(?<modFreq>[^\t]*)\t+(?<freqDev>[^\t]*)\t+(?<AM_Depth>[^\t]*)\t+(?<phase>[^\t]*)\t+(?<wavFileName>[^\t]*)$"
-        SpikeFormat = "(?<n>[^\t]+)\t+(?<sweep>[^\t]+)\t+(?<x_value>[^\t]+)\t+(?<pass>[^\t]*)\t+(?<spikeTimes>.*)$"
     end
 
     methods
-        function obj = Trial(folderPath, fileName, channels )
+        function obj = Trial(folderPath, fileName, channels,...
+                HeaderFormat, SweepFormat, RestFormat, SpikeFormat)
             arguments
                 folderPath (1,1) string {mustBeFolder}
                 fileName (1,1) string
                 channels (1,1) {mustBeNumeric, mustBeInteger}
+                HeaderFormat = "Filename\t+(?<filename>.*) Num_Sweeps\t+(?<numSweeps>.*) Num_Passes\t+(?<numPasses>.*) Rep_Interval\t+(?<repInterval>.*)$"
+                SweepFormat = "(?<sweepNumber>[^\t]+)\t+(?<timeOffset>[^\t]+)\t+(?<channel>[^\t]*)\t+(?<stimType>(SINUS|OFF))\t*(?<rest>.*)$"
+                RestFormat = "(?<delay>[^\t]*)\t+(?<duration>[^\t]*)\t+(?<stimPerSweep>[^\t]*)\t+(?<interStimInt>[^\t]*)\t+(?<level>[^\t]*)\t+(?<carFreq>[^\t]*)\t+(?<modFreq>[^\t]*)\t+(?<freqDev>[^\t]*)\t+(?<AM_Depth>[^\t]*)\t+(?<phase>[^\t]*)\t+(?<wavFileName>[^\t]*)$"
+                SpikeFormat = "(?<n>[^\t]+)\t+(?<sweep>[^\t]+)\t+(?<x_value>[^\t]+)\t+(?<pass>[^\t]*)\t+(?<spikeTimes>.*)$"
             end
             %TRIAL Construct an instance of this class
             %   As channels is not specified in the headers, we need to
@@ -44,6 +49,10 @@ classdef Trial
             assert(isfile(filePath), "The following file does not exit: " + filePath)
             obj.FilePath = filePath;
             obj.Channels = channels;
+            obj.HeaderFormat = HeaderFormat;
+            obj.SweepFormat = SweepFormat;
+            obj.RestFormat = RestFormat;
+            obj.SpikeFormat = SpikeFormat;
             
             % READ FILE AND GET INFORMATION ABOUT THE TRIAL.
             obj.FileContent = readlines( obj.FilePath );

@@ -4,7 +4,7 @@
 readingTrials
 
 %% CONFIGURABLE VARIABLES
-kernel = false; % If false plot PSTH
+kernel = true; % If false plot PSTH only
 db = 70;
 isRelative = true;
 showFreq = true;
@@ -53,7 +53,7 @@ hold off
 subplot(7,7,43:49);
 hold on;
 % Using an updated version of Shimazaki's `ssvkernel()` function.
-ssvkernel( x, x_values, true ); % Set last value to true to plot
+ssvkernel( x, x_values, kernel ); % Set last value to true to plot
 ylabel( "Spike Density (%)" );
 % Plot PSTH
 yyaxis right
