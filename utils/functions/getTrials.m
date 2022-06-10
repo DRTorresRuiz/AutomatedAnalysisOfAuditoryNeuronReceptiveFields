@@ -13,12 +13,14 @@ function trials = getTrials(neuronFiles, channels)
     end
     
     for neuronFile = neuronFiles
-        totalFiles = length(neuronFile.filenames);
-        trialFiles = Trial.empty(totalFiles,0);
-        for i = 1:totalFiles
-            trialFiles(i) = Trial(neuronFile.folderPath, neuronFile.filenames{i}, channels);
+        if ~isempty(neuronFile.neuronNumber)
+            totalFiles = length(neuronFile.filenames);
+            trialFiles = Trial.empty(totalFiles,0);
+            for i = 1:totalFiles
+                trialFiles(i) = Trial(neuronFile.folderPath, neuronFile.filenames{i}, channels);
+            end
+            trials.("Neuron" + neuronFile.neuronNumber) = trialFiles;
         end
-        trials.("Neuron" + neuronFile.neuronNumber) = trialFiles;
     end
 end
 

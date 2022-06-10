@@ -111,9 +111,9 @@ FRA.receptive_field.periphery_receptive_field.periphery_threshold = FRA.receptiv
 FRA.receptive_field.periphery_receptive_field.periphery_threshold = FRA.receptive_field.periphery_receptive_field.periphery_threshold + FRA.receptive_field.less_significant_std;
 
 %%% Total spikes per Freq
-FRA.stats.spikes_per_freq = [y_values', sum(FRA.raw_data,1)'];
+FRA.stats.spikes_per_freq = [FRA.y_values', sum(FRA.raw_data(11:end-10, 11:end-10),1)'];
 %%% Total spikes per dB
-FRA.stats.spikes_per_db = [x_values', sum(FRA.raw_data,2)];
+FRA.stats.spikes_per_db = [FRA.x_values', sum(FRA.raw_data(11:end-10, 11:end-10),2)];
 
 %% Contours
 %%% Bounds of the Periphery RF (PRF)

@@ -72,16 +72,17 @@ function neuronRecords = filesForNeuron(folderPath, yearExperiment, animalID,...
         pathExpression = strcat(folderPath, '\', fileExpression);
         fileList = dir(pathExpression);
         if isempty(fileList)
-            fprintf("No files for %s expression.\n", pathExpression);
+            warning("There are no files for neuron %d.\nReason: No files found for the expression %s.\n", i, pathExpression);
             continue;
-        end
+        else
         
-        % Save all filenames and additional information that 
-        % correspond to a neuron, if exist any file (trial).
-        neuronRecords(i).year = yearExperiment;
-        neuronRecords(i).animalID = animalID;
-        neuronRecords(i).neuronNumber = neuronNumber(i);
-        neuronRecords(i).folderPath = fileList.folder;
-        neuronRecords(i).filenames = {fileList.name};
+            % Save all filenames and additional information that 
+            % correspond to a neuron, if exist any file (trial).
+            neuronRecords(i).year = yearExperiment;
+            neuronRecords(i).animalID = animalID;
+            neuronRecords(i).neuronNumber = neuronNumber(i);
+            neuronRecords(i).folderPath = fileList.folder;
+            neuronRecords(i).filenames = {fileList.name};
+        end
     end
 end

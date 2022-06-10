@@ -209,7 +209,7 @@ classdef Trial
                 if isempty(spikeTimes)
                     spike.SpikeTimes = [];
                 else
-                    spike.SpikeTimes = spikeTimes{1};
+                    spike.SpikeTimes = spikeTimes{1}';
                 end
                 spikes = [spikes spike];
             end

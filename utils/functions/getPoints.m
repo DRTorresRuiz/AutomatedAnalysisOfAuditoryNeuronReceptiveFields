@@ -1,4 +1,4 @@
-function [x, y] = getPoints( spikes, property, num_sweeps,...
+function [x, y] = getPoints( spikesPerTrial, property, num_sweeps,...
             rep_Interval, isRelative )
 %GETPOINTS Given a list of spikes and some configurable values, this
 % function returns x and y coordinates to plot.
@@ -17,17 +17,17 @@ function [x, y] = getPoints( spikes, property, num_sweeps,...
 % $Author: DRTorresRuiz$
     y = [];
     x = [];
-    for spike = spikes
-        if ~isempty(spike.SpikeTimes)
+    for spikes = spikesPerTrial
+        if ~isempty(spikes.SpikeTimes)
 
-            for i = 1:length(spike.SpikeTimes)
+            for i = 1:length(spikes.SpikeTimes)
                 if isRelative
-                    x_value = spike.SpikeTimes(i);        
+                    x_value = spikes.SpikeTimes(i);        
                 else
-                    x_value = mod((spike.n-1), num_sweeps) * rep_Interval + spike.SpikeTimes(i);
+                    x_value = mod((spikes.n-1), num_sweeps) * rep_Interval + spikes.SpikeTimes(i);
                 end
                 x = [x  x_value];
-                y = [y  spike.(property)];
+                y = [y  spikes.(property)];
             end
         end
     end

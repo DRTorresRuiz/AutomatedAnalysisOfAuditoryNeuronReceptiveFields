@@ -1,4 +1,4 @@
-function [FRA, im] = plotFRA( trials, levels, showPeriphery, showCore, ...
+function [FRA, im] = plotFRA( trials, levels, Title, subTitle, showPeriphery, showCore, ...
     showBF, showCF, showSlopes, displayInfo, showFreq, cleanSA, figurePosition )
 %PLOTFRA Given a set of trials for a neuron, plot its FRA.
 %
@@ -14,6 +14,8 @@ function [FRA, im] = plotFRA( trials, levels, showPeriphery, showCore, ...
 arguments
     trials (1, :) Trial
     levels
+    Title = "Frequency Response Area (FRA)";
+    subTitle = "Freq vs dB SPL";
     showPeriphery = true
     showCore = true
     showBF = true
@@ -92,9 +94,7 @@ end
     
     FRA = getFRA( x, y, z, sweeps, channels, y_ticks, z_ticks );
     
-    %% PLOT
-    Title = "Frequency Response Area (FRA)";
-    subTitle = "Freq vs dB SPL";
+    %% PLOT    
     f1 = figure;
     if ~isempty(figurePosition)
         f1.Position = figurePosition;

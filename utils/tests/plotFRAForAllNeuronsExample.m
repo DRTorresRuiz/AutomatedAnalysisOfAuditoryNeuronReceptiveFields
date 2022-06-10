@@ -22,8 +22,10 @@ fnames = fieldnames( trials );
 neurons = fnames( contains(fnames, "Neuron") );
 % warning ('off','all');
 for i = 1:length(neurons)
-    fprintf("\nNeuron: " + neurons{i} + "\n" );
-    [FRA, im] = plotFRA( trials.(neurons{i}), levels, showPeriphery, showCore, ...
+    fprintf("\n" + neurons{i} + ": \n" );
+    Title = {"Frequency Response Area (FRA)", "Neuron number: "+i};
+    subTitle = "Freq vs dB SPL";
+    [FRA, im] = plotFRA( trials.(neurons{i}), levels, Title, subTitle, showPeriphery, showCore, ...
         showBF, showCF, showSlopes, displayInfo, showFreq, cleanSA, figurePosition );
 end
 % warning('on','all');
