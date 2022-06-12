@@ -15,6 +15,10 @@ showBF = true;
 showCF = true;
 showSlopes = true;
 displayInfo = true;
+showFigures = true;
+saveFigures = false;
+saveInformation = false;
+saveExcel = false;
 
 %% PLOT FRA FOR DIFFERENT NEURONS
 
@@ -26,6 +30,7 @@ for i = 1:length(neurons)
     Title = {"Frequency Response Area (FRA)", "Neuron number: "+i};
     subTitle = "Freq vs dB SPL";
     [FRA, im] = plotFRA( trials.(neurons{i}), levels, Title, subTitle, showPeriphery, showCore, ...
-        showBF, showCF, showSlopes, displayInfo, showFreq, cleanSA, figurePosition );
+        showBF, showCF, showSlopes, displayInfo, showFreq, cleanSA, figurePosition,...
+    showFigures, saveFigures, saveInformation, saveExcel, "./" + neurons{i}  );
 end
 % warning('on','all');

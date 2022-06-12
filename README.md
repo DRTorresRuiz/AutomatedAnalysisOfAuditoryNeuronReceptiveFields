@@ -26,6 +26,8 @@ Functions:
 22. [`getFRA( x, y, z, sweeps, channels, y_values, z_values, kernel )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getfra)
 23. [`getBiggestArea( fra_values, threshold, y_values, z_values )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-getbiggestarea)
 24. [`plotFRA( trials, levels, showPeriphery, showCore, showBF, showCF, showSlopes, displayInfo, showFreq, cleanSA, figurePosition )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-plotfra)
+25. [`maxWidthRF( values, sweeps, channels )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-maxwidthrf)
+26. [`analyzeAuditoryNeuron( folder, year, animalID, neuronNumber, channels,levels, FRAConfiguration, PSTHConfiguration, SpikeRaster3DConfiguration,FrequencyResponseProfileConfiguration, output_folder,showFigures, saveExcel, showWarnings, resetFigures, resetConsole )`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-analyzeauditoryneuron)
 
 Classes:
 1. [`Trial`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/wiki/Documentation#-trial)
@@ -39,3 +41,4 @@ Code Examples:
 - [Usage examples of `spikeRaster3D()`](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/spikeRaster3DExamples.m).
 - [Usage example of plotting a FRA](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/plotFRAExample.m).
 - [Plotting FRA for a set of neurons](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/plotFRAForAllNeuronsExample.m).
+- [Main function, `analyzeAuditoryNeuron()`, example](https://github.com/DRTorresRuiz/AutomatedAnalysisOfAuditoryNeuronReceptiveFields/blob/main/utils/tests/analyzeAuditoryNeuronExample.m).

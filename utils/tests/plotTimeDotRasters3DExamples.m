@@ -10,9 +10,14 @@ showFreq = true;
 cleanSA = true; 
 show = true;
 figurePosition = [ 100 100 1000 800 ];
+showFigure = true;
+save = false;
+output_filenames = "./neuron2";
+showTitle = true;
 
 %% PLOT
-im = plotTimeDotRasters3D(t, levels, showFreq, cleanSA, show, figurePosition);
+im = plotTimeDotRasters3D(t, levels, showFreq, cleanSA, show, figurePosition, showFigure,...
+    save, output_filenames, showTitle);
 
 %% SAVE INTO A GIF IMAGE
 saveGIF('animatedDotRaster3D.gif', im);

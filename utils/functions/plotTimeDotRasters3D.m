@@ -1,5 +1,6 @@
 function im = plotTimeDotRasters3D(trials, levels,...
-    showFreq, cleanSA, showSeparation, figurePosition )
+    showFreq, cleanSA, showSeparation, figurePosition, showFigure,...
+    save, output_filenames, showTitle)
 %PLOTTIMEDOTRASTERS3D. This function will show a time dot raster in 3D for
 % all spikes in the variable `trials`, for each value in `levels`. This is
 % a function developed for the sake of simplicity. If you require lower
@@ -20,6 +21,10 @@ arguments
     cleanSA = false
     showSeparation = true
     figurePosition (1,:) {mustBeNumeric} = []
+    showFigure = true
+    save = true
+    output_filenames = ".\spikeRaster3D"
+    showTitle = false
 end
 
     im = [];
@@ -67,9 +72,18 @@ end
 
         if showSeparation && ~isempty(spikes)
             
-            Title = "SPIKES w/o SA";
-            subTitle = "Freq vs dB SPL vs Time";
-            f3 = figure;
+            if showTitle
+                Title = "SPIKES w/o SA";
+                subTitle = "Freq vs dB SPL vs Time";
+            else
+                Title = "";
+                subTitle = "";
+            end
+            if showFigure
+                f3 = figure;
+            else
+                f3 = figure('visible','off');
+            end
             if ~isempty(figurePosition)
                 f3.Position = figurePosition;
             end
@@ -79,12 +93,31 @@ end
 
             frame = getframe(f3);
             im{length(im)+1} = frame2im(frame);
+
+            if save
+                exportgraphics(f3,output_filenames+"-responses.pdf",...
+                    'BackgroundColor','none','ContentType','vector');
+                exportgraphics(f3, output_filenames + "-responses.png");
+            end
+            
+            if ~showFigure
+                close(f3);
+            end
         end
         
         if showSeparation && ~isempty(sa)
-            Title = "SA";
-            subTitle = "Freq vs dB SPL vs Time";
-            f2 = figure;
+            if showTitle
+                Title = "SA";
+                subTitle = "Freq vs dB SPL vs Time";
+            else
+                Title = "";
+                subTitle = "";
+            end
+            if showFigure
+                f2 = figure;
+            else
+                f2 = figure('visible', 'off');
+            end
             if ~isempty(figurePosition)
                 f2.Position = figurePosition;
             end
@@ -94,13 +127,32 @@ end
             
             frame = getframe(f2);
             im{length(im)+1} = frame2im(frame);
+            
+            if save
+                exportgraphics(f2,output_filenames+"-SA.pdf",...
+                    'BackgroundColor','none','ContentType','vector');
+                exportgraphics(f2, output_filenames + "-SA.png");
+            end
+            
+            if ~showFigure
+                close(f2);
+            end
         end
     end
     
     %% Plot all spikes.
-    Title = "All spikes";
-    subTitle = "Time vs Freq vs dB SPL";
-    f1 = figure;
+    if showTitle
+        Title = "All spikes";
+        subTitle = "Freq vs dB SPL vs Time";
+    else
+        Title = "";
+        subTitle = "";
+    end
+    if showFigure
+        f1 = figure;
+    else
+        f1 = figure('visible', 'off');
+    end
     if ~isempty(figurePosition)
         f1.Position = figurePosition;
     end
@@ -110,5 +162,15 @@ end
 
     frame = getframe(f1);
     im{length(im)+1} = frame2im(frame);
+    
+    if save
+        exportgraphics(f1,output_filenames+".pdf",...
+            'BackgroundColor','none','ContentType','vector');
+        exportgraphics(f1, output_filenames + ".png");
+    end
+    
+    if ~showFigure
+        close(f1);
+    end
 end
 
