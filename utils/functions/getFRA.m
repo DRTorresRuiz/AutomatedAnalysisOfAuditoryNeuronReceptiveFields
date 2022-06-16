@@ -51,17 +51,20 @@ FRA.raw_data = zeros( FRA.stats.x_size, FRA.stats.y_size );
 if ~isempty(y_values)
     FRA.stats.max_y = max(y_values);
     FRA.stats.min_y = min(y_values);
-    m_y = min(diff(y_values));
+end
+m_y = min(diff(y_values));
+if ~isempty(y_values)
     y_values = [ (y_values(1) - 10 * m_y):m_y:(y_values(1) - m_y), y_values, (y_values(end) + m_y):m_y:(y_values(end) + 10 * m_y) ];
 end
 
 if ~isempty(x_values)
     FRA.stats.max_x = max(x_values);
     FRA.stats.min_x = min(x_values);
-    m_x = min(diff(x_values));
+end
+ m_x = min(diff(x_values));
+ if ~isempty(x_values)
     x_values = [ (x_values(1) - 10 * m_x):m_x:(x_values(1) - m_x), x_values, (x_values(end) + m_x):m_x:(x_values(end) + 10 * m_x) ];
 end
-
 %% Count values for each position of FRA
 for yi = y_values
     for zi = x_values
@@ -280,11 +283,13 @@ FRA.receptive_field.response_threshold = FRA.receptive_field.periphery_receptive
 FRA.receptive_field.response_threshold = prod([ max(FRA.receptive_field.response_threshold), min(FRA.receptive_field.response_threshold)])^(1/2);
 
 %% Best Frequency (BF). Frequency with the highest response of spikes.
-[~, ibf] = max( max( FRA.raw_data, [], 1) );   
+[~, ibf] = max( max( FRA.transform.conv, [], 1) );   
+% [~, ibf] = max( max( FRA.raw_data, [], 1) );   
 FRA.receptive_field.best_frequency = FRA.y_values(ibf);
 
 %% Best Intensity (BI). Intensity with the highest response of spikes.
-[~, ibi] = max( max( FRA.raw_data, [], 2) );   
+[~, ibi] = max( max( FRA.transform.conv, [], 2) ); 
+% [~, ibi] = max( max( FRA.raw_data, [], 2) ); 
 FRA.receptive_field.best_intensity = FRA.x_values(ibi);
 
 %% FUNCTION SLOPES
@@ -293,10 +298,12 @@ FRA.receptive_field.best_intensity = FRA.x_values(ibi);
 %%% HIGHEST RIGHT POINT
 hrf = max( FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1) );
 hrd = min( FRA.receptive_field.periphery_receptive_field.periphery_bounds( FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1) == hrf, 2 ) );
+% hrf = mean( FRA.receptive_field.periphery_receptive_field.periphery_bounds(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1) >= FRA.receptive_field.response_threshold,1) );
+% hrd = mean( FRA.receptive_field.periphery_receptive_field.periphery_bounds(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2) >= FRA.receptive_field.minimum_threshold,2) );
 %%% LOWEST RIGHT POINT
 % lrd = min( round(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2)) );
 % lrf = max( round(FRA.receptive_field.periphery_receptive_field.periphery_bounds( round(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2)) == lrd, 1 )) );
-lrd = min(FRA.x_values);
+lrd = FRA.receptive_field.minimum_threshold;
 lrf = FRA.receptive_field.response_threshold;
 
 x1 = [ hrf, lrf ];
@@ -307,10 +314,12 @@ FRA.receptive_field.periphery_receptive_field.down_right_slope_PRF = polyfit( x1
 %%% HIGHEST LEFT POINT
 hlf = min( FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1) );
 hld = min( FRA.receptive_field.periphery_receptive_field.periphery_bounds( FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1) == hlf, 2 ) );
+% hlf = mean( FRA.receptive_field.periphery_receptive_field.periphery_bounds(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1) < FRA.receptive_field.response_threshold,1) );
+% hld = mean( FRA.receptive_field.periphery_receptive_field.periphery_bounds(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2) >= FRA.receptive_field.minimum_threshold,2) );
 %%% LOWEST LEFT POINT
 % lld = min( round(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2)) );
 % llf = min( round(FRA.receptive_field.periphery_receptive_field.periphery_bounds( round(FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2)) == lld, 1 )) );
-lld = min(FRA.x_values);
+lld = FRA.receptive_field.minimum_threshold;
 llf = FRA.receptive_field.response_threshold;
 
 x2 = [ hlf, llf ];
@@ -323,10 +332,12 @@ FRA.receptive_field.periphery_receptive_field.down_left_slope_PRF = polyfit( x2,
 %%% HIGHEST RIGHT POINT
 hrf = max( FRA.receptive_field.core_receptive_field.core_bounds(:,1) );
 hrd = min( FRA.receptive_field.core_receptive_field.core_bounds( FRA.receptive_field.core_receptive_field.core_bounds(:,1) == hrf, 2 ) );
+% hrf = mean( FRA.receptive_field.core_receptive_field.core_bounds(FRA.receptive_field.core_receptive_field.core_bounds(:,1) >= FRA.receptive_field.response_threshold,1) );
+% hrd = mean( FRA.receptive_field.core_receptive_field.core_bounds(FRA.receptive_field.core_receptive_field.core_bounds(:,2) >= FRA.receptive_field.minimum_threshold,2) );
 %%% LOWEST RIGHT POINT
 % lrd = min( round(FRA.receptive_field.core_receptive_field.core_bounds(:,2)) );
 % lrf = max( round(FRA.receptive_field.core_receptive_field.core_bounds( round(FRA.receptive_field.core_receptive_field.core_bounds(:,2)) == lrd, 1 )) );
-lrd = min(FRA.x_values);
+lrd = FRA.receptive_field.minimum_threshold;
 lrf = FRA.receptive_field.response_threshold;
 
 x1 = [ hrf, lrf ];
@@ -337,10 +348,12 @@ FRA.receptive_field.core_receptive_field.down_right_slope_CRF = polyfit( x1, y1,
 %%% HIGHEST LEFT POINT
 hlf = min( FRA.receptive_field.core_receptive_field.core_bounds(:,1) );
 hld = min( FRA.receptive_field.core_receptive_field.core_bounds(FRA.receptive_field.core_receptive_field.core_bounds(:,1) == hlf, 2 ) );
+% hlf = mean( FRA.receptive_field.core_receptive_field.core_bounds(FRA.receptive_field.core_receptive_field.core_bounds(:,1) < FRA.receptive_field.response_threshold,1) );
+% hld = mean( FRA.receptive_field.core_receptive_field.core_bounds(FRA.receptive_field.core_receptive_field.core_bounds(:,2) >= FRA.receptive_field.minimum_threshold,2) );
 %%% LOWEST LEFT POINT
 % lld = min( round(FRA.receptive_field.core_receptive_field.core_bounds(:,2)) );
 % llf = min( round(FRA.receptive_field.core_receptive_field.core_bounds( round(FRA.receptive_field.core_receptive_field.core_bounds(:,2)) == lld, 1 )) );
-lld = min(FRA.x_values);
+lld = FRA.receptive_field.minimum_threshold;
 llf = FRA.receptive_field.response_threshold;
 
 x2 = [ hlf, llf ];
@@ -353,5 +366,16 @@ FRA.receptive_field.distance_to_BF_from_CF =...
     log2( ... % log2( f2 / f1 )
     sweepToFreq( FRA.receptive_field.best_frequency, sweeps, channels )...
     / sweepToFreq( FRA.receptive_field.response_threshold, sweeps, channels) );
+
+%% Q10
+index_minimum_threshold = ceil( FRA.receptive_field.minimum_threshold / m_x ) + 1;
+FRA.receptive_field.discrete_minimum_threshold = FRA.x_values( index_minimum_threshold );
+q10_values = FRA.receptive_field.periphery_receptive_field.width_PRF( index_minimum_threshold + 1, :);
+left = sweepToFreq( q10_values(1), sweeps, channels );
+right = sweepToFreq( q10_values(2), sweeps, channels );
+
+result = [ left, right, right-left ];
+FRA.receptive_field.Q10_bandwidth = result;
+FRA.receptive_field.Q10 = sweepToFreq( FRA.receptive_field.response_threshold, sweeps, channels) / result(3);
 end
 

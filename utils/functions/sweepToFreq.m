@@ -9,7 +9,7 @@ function y = sweepToFreq(y, sweeps, channels)
 %
 % $Author: DRTorresRuiz$
     for i = 1:length(y)
-        y(i) = sweeps( y(i) * channels - (channels - 1) ).CarFreq;
+        y(i) = sweeps( round(y(i)) * channels - (channels - 1) ).CarFreq;
     end
 end
 

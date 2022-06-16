@@ -16,9 +16,9 @@ function [x, y, z] = get3DPoints( groupedTrials )
 % $Author: DRTorresRuiz$
 
     % Retrieving general information
-    t = groupedTrials(1).Trials(1);
-    num_sweeps = t.Num_Sweeps;
-    rep_interval = t.Rep_Interval;
+    t = [ groupedTrials.Trials ];
+    num_sweeps = t(1).Num_Sweeps;
+    rep_interval = t(1).Rep_Interval;
     
     x = [];
     y = [];

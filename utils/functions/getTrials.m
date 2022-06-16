@@ -17,6 +17,7 @@ function trials = getTrials(neuronFiles, channels)
             totalFiles = length(neuronFile.filenames);
             trialFiles = Trial.empty(totalFiles,0);
             for i = 1:totalFiles
+%                 fprintf([neuronFile.folderPath, neuronFile.filenames{i}])
                 trialFiles(i) = Trial(neuronFile.folderPath, neuronFile.filenames{i}, channels);
             end
             trials.("Neuron" + neuronFile.neuronNumber) = trialFiles;
