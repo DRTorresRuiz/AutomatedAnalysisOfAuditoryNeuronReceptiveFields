@@ -35,68 +35,6 @@ arguments
     output_filename = ".\FRA"
 end
 
-    function [xi, yi] = getPolygon( x, y, x_values, y_values )
-        xi = x;
-        yi = y;
-        if xi(end) >= max(x_values) 
-            xi = [xi; max(x_values)];
-            yi = [yi; max(y_values)];
-        elseif xi(1) >= max(x_values)
-            xi = [max(x_values); xi];
-            yi = [max(y_values); yi];
-        end
-            
-        if xi(1) <= min(x_values) 
-            xi = [min(x_values); xi];
-            yi = [max(y_values); yi];
-        elseif x(end) <= min(x_values)
-            xi = [xi; min(x_values)];
-            yi = [yi; max(y_values)];
-        end
-    end
-
-    function printInformation( fID, FRA, sweeps, channels, cleanSA )
-        fprintf( fID, "\n\tStatistical Information (number of spikes):"+...
-                "\n\t\tMean:\t%f"+...
-                "\n\t\tMedian:\t%f" +...
-                "\n\t\tMode:\t%f" +...
-                "\n\t\tStandard Deviation:\t%f" +...
-                "\n\t\tVariance:\t%f" +...
-                "\n\t\tMax:\t%f" +...
-                "\n\t\tMin:\t%f" +...
-                "\n\t\tTotal number of spikes:\t%f" +...
-                "\n", FRA.stats.mean, FRA.stats.median, FRA.stats.mode,...
-                FRA.stats.std, FRA.stats.var, FRA.stats.max, FRA.stats.min,...
-                FRA.stats.total_spikes);
-
-        fprintf( fID, "\n\tReceptive field (RF) information:"+...
-            "\n\t\tSpikes in RF:\t%f"+...
-            "\n\t\tArea of RF (%%):\t%f" +...
-            "\n\t\tMinimum Threshold (dB SPL):\t%f" +...
-            "\n\t\tCharacteristic Frequency, CF (Hz):\t%f" +...
-            "\n\t\tBest Frequency, BF (Hz):\t%f" +...
-            "\n\t\tDistance from CF to BF (octaves):\t%f" +...
-            "\n\t\tBiggest frequency interval of RF (Hz):\t[%f, %f]"+...
-            "\n\t\t\tSeparation (Hz):\t%f" +...
-            "\n\t\t\tSeparation (Octaves):\t%f" +...
-            "\n\t\tQ10:\t%f" +...
-            "\n\t\tPeriphery threshold:\t%f" +...
-            "\n\t\tCore threshold:\t%f" +...
-            "\n", FRA.receptive_field.spikes_RF,...
-            FRA.receptive_field.area_RF * 100,...
-            FRA.receptive_field.minimum_threshold,...
-            sweepToFreq( FRA.receptive_field.response_threshold, sweeps, channels ),...
-            sweepToFreq( FRA.receptive_field.best_frequency, sweeps, channels ),...
-            FRA.receptive_field.distance_to_BF_from_CF,...
-            maxWidthRF(FRA.receptive_field.periphery_receptive_field.width_PRF, sweeps, channels),...
-            FRA.receptive_field.Q10, FRA.receptive_field.periphery_receptive_field.periphery_threshold,...
-            FRA.receptive_field.core_receptive_field.core_threshold);
-        
-        if cleanSA
-            fprintf(fID, "\n\tSpontaneous Activity (SA) detected (%%):\t%f\n\n",...
-                FRA.stats.spontaneous_activity_detected * 100 );
-        end
-    end
 
     function writeExcel( output_filename, FRA, sweeps, channels )
         varNames = { 'Mean', 'Median', 'Mode', 'Standard Deviation', 'Variance', 'Max', 'Min', '#Spikes', 'SA detected (%)' };
@@ -170,7 +108,8 @@ end
     
     %% GET FRA
     
-    FRA = getFRA( x, y, z, sweeps, channels, y_ticks, z_ticks );
+    FRA = getFRA( x, y, z, y_ticks, z_ticks );
+    FRA = analyzeFRA( FRA, sweeps, channels );
     if cleanSA
         
         FRA.stats.spontaneous_activity_detected = 1 - length(x)/total_spikes;
@@ -188,113 +127,116 @@ end
         f1.Position = figurePosition;
     end
     
-    p = pcolor(y_ticks, z_ticks, FRA.transform.conv);
-    
-    p.FaceColor = 'interp';
-    p.EdgeColor = 'white';
-    p.EdgeAlpha = 0.1;
-    hold on
-    if showPeriphery
-        [xp, yp] = getPolygon( ...
-            FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1),...
-            FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2),...
-            y_ticks, z_ticks );
-        pgon = polyshape( xp, yp ); 
-        plot( pgon, 'FaceColor', 'none', 'EdgeColor', '#EDB120', 'LineWidth', 1 );
-    end
-    
-    if showCore
-        [xp, yp] = getPolygon( ...
-            FRA.receptive_field.core_receptive_field.core_bounds(:,1),...
-            FRA.receptive_field.core_receptive_field.core_bounds(:,2),...
-            y_ticks, z_ticks );
-        pgon = polyshape( xp, yp ); 
-        plot( pgon, 'FaceColor', 'none', 'EdgeColor', '#A2142F', 'LineWidth', 1 );
-    end
-    
-    if showBF
-        plot( FRA.receptive_field.best_frequency, FRA.receptive_field.best_intensity, 'kp', 'linewidth', 2 );
-        txt = sprintf('\n\n\n BF\n%0.2f (KHz)', sweepToFreq( FRA.receptive_field.best_frequency, sweeps, channels ) / 1000 );
-        text(FRA.receptive_field.best_frequency,...
-            FRA.receptive_field.best_intensity,txt, 'FontSize',10, 'HorizontalAlignment', 'center'  );
-    end
-    
-    if showCF
-        cf = sweepToFreq( FRA.receptive_field.response_threshold, sweeps, channels );
-        txt = sprintf(' CF\n %0.2f (KHz)', cf / 1000);
-        xl = xline( FRA.receptive_field.response_threshold, 'w-', {txt}, 'linewidth', 2 );
-        xl.LabelVerticalAlignment = 'bottom';
-        if FRA.receptive_field.response_threshold > FRA.y_values(end-round(length(FRA.y_values)/5)) 
-            xl.LabelHorizontalAlignment = 'left';
-        else
-            xl.LabelHorizontalAlignment = 'right';
-        end
-        xl.LabelOrientation = 'horizontal';
-        xl.FontSize = 9;
-    end
-    
-    if showMT
-        
-        txt = sprintf(' Min Threshold\n %0.2f (dB SPL)', FRA.receptive_field.minimum_threshold);
-        yl = yline( FRA.receptive_field.minimum_threshold, 'w-', {txt}, 'linewidth', 2 );
-        
-        if FRA.receptive_field.minimum_threshold > FRA.x_values(end-2)
-            yl.LabelVerticalAlignment = 'bottom';
-        else
-            yl.LabelVerticalAlignment = 'top';
-        end
-        
-        yl.LabelHorizontalAlignment = 'left';
-        yl.FontSize = 9;
-    end
-    
-    if showSlopes
-        
-        x_continuous = min(y_ticks):0.001:max(y_ticks);
-        
-        %%% Periphery RF
-        % right
-        f = @(x) FRA.receptive_field.periphery_receptive_field.down_right_slope_PRF(1) * x + FRA.receptive_field.periphery_receptive_field.down_right_slope_PRF(2);
-        % left
-        g = @(x) FRA.receptive_field.periphery_receptive_field.down_left_slope_PRF(1) * x + FRA.receptive_field.periphery_receptive_field.down_left_slope_PRF(2);
-        fy = f( x_continuous );
-        gy = g( x_continuous );
-        plot( x_continuous( fy > FRA.receptive_field.minimum_threshold ), fy( fy > FRA.receptive_field.minimum_threshold ), 'y:', 'linewidth',2 );
-        plot( x_continuous( gy > FRA.receptive_field.minimum_threshold ), gy( gy > FRA.receptive_field.minimum_threshold ), 'y:', 'linewidth',2 );
-       
-        
-        %%% Core RF
-        % right
-        f = @(x) FRA.receptive_field.core_receptive_field.down_right_slope_CRF(1) * x + FRA.receptive_field.core_receptive_field.down_right_slope_CRF(2);
-        % left
-        g = @(x) FRA.receptive_field.core_receptive_field.down_left_slope_CRF(1) * x + FRA.receptive_field.core_receptive_field.down_left_slope_CRF(2);
-        fy = f( x_continuous );
-        gy = g( x_continuous );
-        plot( x_continuous( fy > FRA.receptive_field.minimum_threshold ), fy( fy > FRA.receptive_field.minimum_threshold ), 'r:', 'linewidth',2 );
-        plot( x_continuous( gy > FRA.receptive_field.minimum_threshold ), gy( gy > FRA.receptive_field.minimum_threshold ), 'r:', 'linewidth',2 );
-    end
-    
-    xlabel("Freq (KHz)");
-    ylabel({'Sound Level', '(dB SPL)'});
-    
-    xlim([min(y_ticks), max(y_ticks)]);
-    ylim([min(z_ticks), max(z_ticks)]);
-    xticks(y_ticks);
-    yticks(z_ticks);
-    xticklabels( round( y_tick_labels / 1000, 3) );
-    yticklabels( levels );
-    [t, s] = title(Title, {subTitle, ""});
-    t.FontSize = 16;
-    s.FontAngle = 'italic';
-    
-    % Colorbar
-    if showColorbar
-        caxis([0, max(FRA.transform.conv, [], 'all')]);
-        c = colorbar;
-        c.Label.Position(1) = 0;
-        c.Label.String = "Spike rate";
-    end
-    drawnow;
+    drawFRA(FRA, Title, subTitle, "Freq (KHz)", {'Sound Level', '(dB SPL)'},...
+        y_ticks, z_ticks, y_tick_labels, levels, sweeps, channels, showPeriphery,...
+        showCore, showBF, showCF, showMT, showSlopes, showColorbar);
+%     p = pcolor(y_ticks, z_ticks, FRA.transform.conv);
+%     
+%     p.FaceColor = 'interp';
+%     p.EdgeColor = 'white';
+%     p.EdgeAlpha = 0.1;
+%     hold on
+%     if showPeriphery
+%         [xp, yp] = getPolygon( ...
+%             FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,1),...
+%             FRA.receptive_field.periphery_receptive_field.periphery_bounds(:,2),...
+%             y_ticks, z_ticks );
+%         pgon = polyshape( xp, yp ); 
+%         plot( pgon, 'FaceColor', 'none', 'EdgeColor', '#EDB120', 'LineWidth', 1 );
+%     end
+%     
+%     if showCore
+%         [xp, yp] = getPolygon( ...
+%             FRA.receptive_field.core_receptive_field.core_bounds(:,1),...
+%             FRA.receptive_field.core_receptive_field.core_bounds(:,2),...
+%             y_ticks, z_ticks );
+%         pgon = polyshape( xp, yp ); 
+%         plot( pgon, 'FaceColor', 'none', 'EdgeColor', '#A2142F', 'LineWidth', 1 );
+%     end
+%     
+%     if showBF
+%         plot( FRA.receptive_field.best_frequency, FRA.receptive_field.best_intensity, 'kp', 'linewidth', 2 );
+%         txt = sprintf('\n\n\n BF\n%0.2f (KHz)', sweepToFreq( FRA.receptive_field.best_frequency, sweeps, channels ) / 1000 );
+%         text(FRA.receptive_field.best_frequency,...
+%             FRA.receptive_field.best_intensity,txt, 'FontSize',10, 'HorizontalAlignment', 'center'  );
+%     end
+%     
+%     if showCF
+%         cf = sweepToFreq( FRA.receptive_field.response_threshold, sweeps, channels );
+%         txt = sprintf(' CF\n %0.2f (KHz)', cf / 1000);
+%         xl = xline( FRA.receptive_field.response_threshold, 'w-', {txt}, 'linewidth', 2 );
+%         xl.LabelVerticalAlignment = 'bottom';
+%         if FRA.receptive_field.response_threshold > FRA.y_values(end-round(length(FRA.y_values)/5)) 
+%             xl.LabelHorizontalAlignment = 'left';
+%         else
+%             xl.LabelHorizontalAlignment = 'right';
+%         end
+%         xl.LabelOrientation = 'horizontal';
+%         xl.FontSize = 9;
+%     end
+%     
+%     if showMT
+%         
+%         txt = sprintf(' Min Threshold\n %0.2f (dB SPL)', FRA.receptive_field.minimum_threshold);
+%         yl = yline( FRA.receptive_field.minimum_threshold, 'w-', {txt}, 'linewidth', 2 );
+%         
+%         if FRA.receptive_field.minimum_threshold > FRA.x_values(end-2)
+%             yl.LabelVerticalAlignment = 'bottom';
+%         else
+%             yl.LabelVerticalAlignment = 'top';
+%         end
+%         
+%         yl.LabelHorizontalAlignment = 'left';
+%         yl.FontSize = 9;
+%     end
+%     
+%     if showSlopes
+%         
+%         x_continuous = min(y_ticks):0.001:max(y_ticks);
+%         
+%         %%% Periphery RF
+%         % right
+%         f = @(x) FRA.receptive_field.periphery_receptive_field.down_right_slope_PRF(1) * x + FRA.receptive_field.periphery_receptive_field.down_right_slope_PRF(2);
+%         % left
+%         g = @(x) FRA.receptive_field.periphery_receptive_field.down_left_slope_PRF(1) * x + FRA.receptive_field.periphery_receptive_field.down_left_slope_PRF(2);
+%         fy = f( x_continuous );
+%         gy = g( x_continuous );
+%         plot( x_continuous( fy > FRA.receptive_field.minimum_threshold ), fy( fy > FRA.receptive_field.minimum_threshold ), 'y:', 'linewidth',2 );
+%         plot( x_continuous( gy > FRA.receptive_field.minimum_threshold ), gy( gy > FRA.receptive_field.minimum_threshold ), 'y:', 'linewidth',2 );
+%        
+%         
+%         %%% Core RF
+%         % right
+%         f = @(x) FRA.receptive_field.core_receptive_field.down_right_slope_CRF(1) * x + FRA.receptive_field.core_receptive_field.down_right_slope_CRF(2);
+%         % left
+%         g = @(x) FRA.receptive_field.core_receptive_field.down_left_slope_CRF(1) * x + FRA.receptive_field.core_receptive_field.down_left_slope_CRF(2);
+%         fy = f( x_continuous );
+%         gy = g( x_continuous );
+%         plot( x_continuous( fy > FRA.receptive_field.minimum_threshold ), fy( fy > FRA.receptive_field.minimum_threshold ), 'r:', 'linewidth',2 );
+%         plot( x_continuous( gy > FRA.receptive_field.minimum_threshold ), gy( gy > FRA.receptive_field.minimum_threshold ), 'r:', 'linewidth',2 );
+%     end
+%     
+%     xlabel("Freq (KHz)");
+%     ylabel({'Sound Level', '(dB SPL)'});
+%     
+%     xlim([min(y_ticks), max(y_ticks)]);
+%     ylim([min(z_ticks), max(z_ticks)]);
+%     xticks(y_ticks);
+%     yticks(z_ticks);
+%     xticklabels( round( y_tick_labels / 1000, 3) );
+%     yticklabels( levels );
+%     [t, s] = title(Title, {subTitle, ""});
+%     t.FontSize = 16;
+%     s.FontAngle = 'italic';
+%     
+%     % Colorbar
+%     if showColorbar
+%         caxis([0, max(FRA.transform.conv, [], 'all')]);
+%         c = colorbar;
+%         c.Label.Position(1) = 0;
+%         c.Label.String = "Spike rate";
+%     end
+%     drawnow;
     
     frame = getframe(f1);
     im{1} = frame2im(frame);
@@ -310,12 +252,20 @@ end
     end
     
     if displayInfo
-        printInformation( 1, FRA, sweeps, channels, cleanSA );
+        printInformation( FRA, 1, sweeps, channels );
+        if cleanSA
+            fprintf("\n\tSpontaneous Activity (SA) detected (%%):\t%f\n\n",...
+                FRA.stats.spontaneous_activity_detected * 100 );
+        end
     end
 
     if saveInformation
         fID = fopen(output_filename+".txt", 'w');
-        printInformation( fID, FRA, sweeps, channels, cleanSA )
+        printInformation( FRA, fID, sweeps, channels )
+        if cleanSA
+            fprintf(fID, "\n\tSpontaneous Activity (SA) detected (%%):\t%f\n\n",...
+            FRA.stats.spontaneous_activity_detected * 100 );
+        end
         fclose(fID);
     end
 

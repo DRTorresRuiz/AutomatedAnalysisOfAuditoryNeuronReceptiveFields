@@ -15,14 +15,14 @@ folder = [  ".\IC Ionto\13_128_Ionto\FRA\";...
             ".\IC Ionto\14_009_Ionto\FRA\";...
             ".\IC Ionto\14_012_Ionto\FRA\";
 ];
-% folder = ".\IC Ionto\14_009_Ionto\FRA\";
+folder = ".\IC Ionto\14_009_Ionto\FRA\";
 
 year = [13; 13; 13; 13; 14; 13; 13; 14; 14; 14; 14; 14];
-% year = 14;
+year = 14;
 
 
 animalID = [ "128"; "121"; "127"; "114"; "047"'; "116"; "125"; "005"; "007"; "008"; "009"; "012"];
-% animalID = "009";
+animalID = "009";
 
 neuronNumber = { [1 2 3 5 6 7];... 
     1:6;...
@@ -37,7 +37,7 @@ neuronNumber = { [1 2 3 5 6 7];...
     [ 1 2 3 ];...
     [ 2 ];...
     }; % Note the curly brackets (25)
-% neuronNumber = [ 1 2 3 ];
+neuronNumber = [ 1 2 3 ];
 
 channels = 2;
 levels = 0:10:80;
