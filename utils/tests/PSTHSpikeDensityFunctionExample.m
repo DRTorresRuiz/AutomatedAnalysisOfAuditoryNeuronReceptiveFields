@@ -5,7 +5,7 @@ readingTrials
 
 %% CONFIGURABLE VARIABLES
 kernel = true; % If false plot PSTH only
-db = 70;
+db = 80;
 isRelative = true;
 showFreq = true;
 property = "Sweep";
@@ -40,17 +40,17 @@ spikes = getAllSpikes(groupedTrials(1).Trials);
 f = figure;
 f.Position = [ 100 100 1250 800 ];
 
-subplot(7,7,[1:7 8:14 15:21 22:28 29:35 36:42]);
-hold on
+% subplot(7,7,[1:7 8:14 15:21 22:28 29:35 36:42]);
+% hold on
+% 
+%     timeSpikeRaster(x, y, y_ticks, property,...
+%         "Spike Raster", "Level: " +db+" dB SPL", showFreq, channels, sweeps );
+%     plotStimBlock(delay, duration, interval, sweep_number, isRelative);
+%     set(gca,'xlabel',[]) % Remove x label to avoid duplication
+% 
+% hold off
 
-    timeSpikeRaster(x, y, y_ticks, property,...
-        "Spike Raster", "Level: " +db+" dB SPL", showFreq, channels, sweeps );
-    plotStimBlock(delay, duration, interval, sweep_number, isRelative);
-    set(gca,'xlabel',[]) % Remove x label to avoid duplication
-
-hold off
-
-subplot(7,7,43:49);
+% subplot(7,7,43:49);
 hold on;
 % Using an updated version of Shimazaki's `ssvkernel()` function.
 ssvkernel( x, x_values, kernel ); % Set last value to true to plot
@@ -61,5 +61,7 @@ PSTH( x, x_values );
 plotStimBlock( delay, duration, interval, sweep_number, isRelative )
 hold off;
 
+%% Save figure
+exportgraphics(f,"PSTH.pdf", 'BackgroundColor','none','ContentType','vector');
 
 

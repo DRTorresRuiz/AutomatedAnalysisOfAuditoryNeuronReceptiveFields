@@ -18,7 +18,7 @@ arguments
     showBF = true
     showCF = true
     showMT = true
-    showSlopes = true
+    showSlopes = false
     showColorbar = true
 end
     function [xi, yi] = getPolygon( x, y, x_values, y_values )
@@ -140,8 +140,8 @@ end
     
     xlim([min(x_ticks), max(x_ticks)]);
     ylim([min(y_ticks), max(y_ticks)]);
+    xticks(x_ticks);
     if ~isempty(sweeps)
-        xticks(x_ticks);
         xticklabels( round( x_tick_labels / 1000, 3) );
     end
     yticks(y_ticks);

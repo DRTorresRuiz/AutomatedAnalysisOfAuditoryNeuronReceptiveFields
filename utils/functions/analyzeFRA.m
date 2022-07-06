@@ -35,6 +35,13 @@ end
 m_x = min(diff(FRA.x_values));
 x_values = [ (FRA.x_values(1) - additional_interval * m_x):m_x:(FRA.x_values(1) - m_x), FRA.x_values, (FRA.x_values(end) + m_x):m_x:(FRA.x_values(end) + additional_interval * m_x) ];
 
+% if size(FRA.raw_data) ~=
+if size(FRA.raw_data) ~= [length(x_values), length(y_values)]
+    new_raw_data = zeros(length(x_values), length(y_values));
+	new_raw_data( (additional_interval+1):(end-additional_interval), (additional_interval+1):(end-additional_interval) ) = FRA.raw_data;
+    FRA.raw_data = new_raw_data;
+end
+
 FRA.transform.normalized = FRA.raw_data / sum(FRA.raw_data, 'all');
 FRA.stats.mean = mean(FRA.raw_data((additional_interval+1):(end-additional_interval), (additional_interval+1):(end-additional_interval)), 'all');
 FRA.stats.median = median(FRA.raw_data((additional_interval+1):(end-additional_interval), (additional_interval+1):(end-additional_interval)), 'all');
@@ -45,7 +52,9 @@ FRA.stats.max = max(FRA.raw_data((additional_interval+1):(end-additional_interva
 FRA.stats.min = min(FRA.raw_data((additional_interval+1):(end-additional_interval), (additional_interval+1):(end-additional_interval)), [], 'all');
 %%% Smooth convolution
 % FRA.transform.conv = conv2(FRA.transform.normalized, [ 1 1 1; 1 1 1; 1 1 1], 'same'); 
-FRA.transform.conv = conv2(FRA.transform.normalized, kernel, 'same');
+% FRA.transform.conv = conv2(FRA.transform.normalized, kernel, 'same');
+FRA.transform.conv = conv2(FRA.raw_data, kernel, 'same');
+FRA.transform.conv = FRA.transform.conv * ( max(FRA.raw_data, [], 'all') / max(FRA.transform.conv, [], 'all') );
 %%% Negative smooth convolution
 % FRA.transform.negconv = conv2(FRA.transform.normalized, [ -1 -1 -1; -1 -1 -1; -1 -1 -1], 'same'); 
 FRA.transform.negconv = conv2(FRA.transform.normalized, (-1)*kernel, 'same'); 

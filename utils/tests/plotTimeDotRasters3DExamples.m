@@ -11,9 +11,9 @@ cleanSA = true;
 show = true;
 figurePosition = [ 100 100 1000 800 ];
 showFigure = true;
-save = false;
+save = true;
 output_filenames = "./neuron2";
-showTitle = true;
+showTitle = false;
 
 %% PLOT
 im = plotTimeDotRasters3D(t, levels, showFreq, cleanSA, show, figurePosition, showFigure,...

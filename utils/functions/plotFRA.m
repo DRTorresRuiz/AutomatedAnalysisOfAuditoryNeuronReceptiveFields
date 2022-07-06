@@ -71,6 +71,7 @@ end
     duration = trials(1).Duration;
     channels = trials(1).Channels;
     sweeps = trials(1).getSweeps();
+    num_passes = trials(1).Num_Passes;
     
     %% Get 3D points
     groupedTrials = groupTrialsByLevel(trials, levels);
@@ -108,7 +109,7 @@ end
     
     %% GET FRA
     
-    FRA = getFRA( x, y, z, y_ticks, z_ticks );
+    FRA = getFRA( x, y, z, y_ticks, z_ticks, num_passes );
     FRA = analyzeFRA( FRA, sweeps, channels );
     if cleanSA
         
@@ -127,9 +128,15 @@ end
         f1.Position = figurePosition;
     end
     
-    drawFRA(FRA, Title, subTitle, "Freq (KHz)", {'Sound Level', '(dB SPL)'},...
-        y_ticks, z_ticks, y_tick_labels, levels, sweeps, channels, showPeriphery,...
-        showCore, showBF, showCF, showMT, showSlopes, showColorbar);
+    if showFreq
+        drawFRA(FRA, Title, subTitle, "Freq (kHz)", {'Sound Level', '(dB SPL)'},...
+            y_ticks, z_ticks, y_tick_labels, levels, sweeps, channels, showPeriphery,...
+            showCore, showBF, showCF, showMT, showSlopes, showColorbar);
+    else
+        drawFRA(FRA, Title, subTitle, "Freq (kHz)", {'Sound Level', '(dB SPL)'},...
+            y_ticks, z_ticks, y_tick_labels, levels, [], channels, showPeriphery,...
+            showCore, showBF, showCF, showMT, showSlopes, showColorbar);
+    end
 %     p = pcolor(y_ticks, z_ticks, FRA.transform.conv);
 %     
 %     p.FaceColor = 'interp';

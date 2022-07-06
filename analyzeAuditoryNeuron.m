@@ -319,7 +319,7 @@ for i = 1:length(folders)
 
         heatmap(xvar, yvar, profile, "Title", Title,...
             'Colormap', parula, 'CellLabelColor','none' );
-        xlabel( "Frequencies (KHz)" );
+        xlabel( "Frequencies (kHz)" );
         ylabel( "Neuron ID" );
         
         if FrequencyResponseProfileConfiguration.save
@@ -353,7 +353,7 @@ if (FrequencyResponseProfileConfiguration.show || FrequencyResponseProfileConfig
 
     heatmap(xvar, all_yvar, all_profiles, "Title", Title,...
         'Colormap', parula, 'CellLabelColor','none' );
-    xlabel( "Frequencies (KHz)" );
+    xlabel( "Frequencies (kHz)" );
     ylabel( "Neuron ID" );
     if FrequencyResponseProfileConfiguration.save
         exportgraphics(fprofile,output_folder  + "\FRProfile.pdf",...

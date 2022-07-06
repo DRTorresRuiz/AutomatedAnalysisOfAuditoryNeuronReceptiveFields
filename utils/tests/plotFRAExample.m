@@ -11,14 +11,16 @@ showFreq = true;
 cleanSA = true;
 figurePosition = [ 100 100 1000 800 ];
 
-showPeriphery = true;
-showCore= true;
-showBF = true;
-showCF = true;
-showSlopes = true;
+showPeriphery = false;
+showCore= false;
+showBF = false;
+showMT = false;
+showCF = false;
+showSlopes = false;
+showColorbar = true;
 displayInfo = true;
 showFigures = true;
-saveFigures = false;
+saveFigures = true;
 saveInformation = false;
 saveExcel = false;
 output_filename = "./neuron1";
@@ -26,6 +28,8 @@ output_filename = "./neuron1";
 %% PLOT
 Title = "Frequency Response Area (FRA)";
 subTitle = "Freq vs dB SPL";
+Title = "";
+subTitle = "";
 [FRA, im] = plotFRA( t, levels, Title, subTitle, showPeriphery, showCore, ...
-    showBF, showCF, showSlopes, displayInfo, showFreq, cleanSA, figurePosition,...
-    showFigures, saveFigures, saveInformation, saveExcel, output_filename );
+    showBF, showCF, showMT, showSlopes, displayInfo, showFreq, cleanSA, showColorbar,...
+    figurePosition, showFigures, saveFigures, saveInformation, saveExcel, output_filename );

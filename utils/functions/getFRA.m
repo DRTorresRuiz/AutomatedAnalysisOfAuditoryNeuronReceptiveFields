@@ -1,4 +1,4 @@
-function FRA = getFRA( x, y, z, y_values, x_values, additional_interval )
+function FRA = getFRA( x, y, z, y_values, x_values, repetitions, additional_interval )
 %GETFRA Given a specific number of points, that represent spikes, this
 % function returns FRA information.
 %
@@ -25,6 +25,7 @@ arguments
     z (1,:)
     y_values = unique(y)
     x_values = unique(z)
+    repetitions = 1
     additional_interval = 10
 end
 
@@ -56,6 +57,8 @@ for yi = y_values
         FRA.raw_data( idz, idy ) = total_spikes;
     end
 end
+
+FRA.raw_data =  FRA.raw_data / repetitions;
 
 end
 
